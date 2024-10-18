@@ -40,7 +40,50 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Load fragment đầu tiên nếu chưa có
+        if (savedInstanceState == null) {
+            //Hiện Map đầu tiên
+            replaceFragment(new MapsFragment());
+            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new HomeFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_home);
+        }
+        //Thay thế Fragment theo lựa chọn của NavigationView
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_settings) {
+                replaceFragment(new SettingFragment());
+            }else if(item.getItemId() == R.id.nav_share){
+                replaceFragment(new ShareFragment());
+            }else if(item.getItemId() == R.id.nav_about){
+                replaceFragment(new AboutFragment());
+            }else if(item.getItemId() == R.id.nav_logout){
+                replaceFragment(new LogoutFragment());
+            }else if(item.getItemId() == R.id.nav_home){
+                replaceFragment(new MapsFragment());
+            }
+            return true;
+        });
+
+        // Thay thế Fragment theo lựa chọn của BottomNavigationView
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if(item.getItemId() == R.id.home)
+            {
+                replaceFragment(new MapsFragment());
+            } else if (item.getItemId() == R.id.shorts) {
+                replaceFragment(new ShortsFragment());
+            }else if (item.getItemId() == R.id.subscriptions) {
+                replaceFragment(new SubscriptionFragment());
+            }else if (item.getItemId() == R.id.library) {
+                replaceFragment(new LibraryFragment());
+            }
+            return true;
+        });
 
     }
-
+    // Hàm thay thế Fragment
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_layout, fragment);
+        fragmentTransaction.commit();
+    }
 }

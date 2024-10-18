@@ -13,6 +13,6 @@
         android:textColor="@color/white"
         android:gravity="center"
         android:textSize="50sp"
-        android:background="@color/yellow"/>
+        android:background="@color/yellow" />
 
 </FrameLayout>

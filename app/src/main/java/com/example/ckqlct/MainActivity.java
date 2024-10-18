@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 //AHDGADIAIDASDADSDSA
+        // nam
 
     }
 

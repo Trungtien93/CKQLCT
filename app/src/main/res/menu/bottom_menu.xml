@@ -17,7 +17,7 @@
         android:icon="@drawable/ic_buy"/>
     <item
         android:id="@+id/statictical"
-        android:title="Sell"
+        android:title="Statictical"
         android:icon="@drawable/ic_statictical"/>
 
 </menu>

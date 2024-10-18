@@ -1,6 +1,7 @@
 package com.example.ckqlct;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -78,11 +80,21 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new ShareFragment ());
             }else if(item.getItemId() == R.id.nav_about){
                 replaceFragment(new AboutFragment ());
-            }else if(item.getItemId() == R.id.nav_logout){
-                replaceFragment(new LogoutFragment ());
+            }  else if (item.getItemId() == R.id.nav_logout) {
+                // Hiển thị cảnh báo trước khi đăng xuất
+                Notify.showExitConfirmation(MainActivity.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        // Chuyển sang LoginActivity nếu người dùng xác nhận
+                        Intent intent = new Intent(MainActivity.this, Login.class);
+                        startActivity(intent);
+                        finish();  // Đóng MainActivity
+                    }
+                });
             }
             return true;
         });
+
 
 //        // Thay thế Fragment theo lựa chọn của BottomNavigationView
         bottomNavigationView.setOnItemSelectedListener(item -> {

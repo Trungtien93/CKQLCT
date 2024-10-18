@@ -50,17 +50,17 @@ public class Login extends Activity {
         username.setText(a);
         password.setText(b);
 
-//        eregister.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Intent in = new Intent(Login.this,RegisterActivity.class);
-//
-//                startActivity(in);
-//
-//
-//            }
-//        });
+        eregister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent in = new Intent(Login.this,RegisterActivity.class);
+
+                startActivity(in);
+
+
+            }
+        });
 
         elogin.setOnClickListener(new View.OnClickListener() {
             @Override

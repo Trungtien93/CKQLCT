@@ -9,9 +9,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -23,11 +24,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ckqlct.Bottom_fragment.BuyFragment;
+import com.example.ckqlct.Bottom_fragment.HomeFragment;
 import com.example.ckqlct.Bottom_fragment.ManagerFragment;
 import com.example.ckqlct.Bottom_fragment.StaticticalFragment;
 import com.example.ckqlct.Nav_fragment.AboutFragment;
-import com.example.ckqlct.Nav_fragment.HomeFragment;
-import com.example.ckqlct.Nav_fragment.LogoutFragment;
 import com.example.ckqlct.Nav_fragment.SettingsFragment;
 import com.example.ckqlct.Nav_fragment.ShareFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // Gán view cho DrawerLayout, Toolbar và BottomNavigationView
         bottomNavigationView = findViewById (R.id.bottomNavigationView);
@@ -120,63 +121,81 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //    private void showBottomDialog(){
-//
-//    }
-    private void showBottomDialog() {
 
+    private void showBottomDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottomsheet);
 
-        LinearLayout videoLayout = dialog.findViewById(R.id.layoutVideo);
-        LinearLayout shortsLayout = dialog.findViewById(R.id.layoutShorts);
-        LinearLayout liveLayout = dialog.findViewById(R.id.layoutLive);
-        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+        // Khởi tạo Spinner bên trong Dialog
+        Spinner loai = dialog.findViewById(R.id.spinnerloaigd);
+        String loaict[] = {"Chi Tiêu", "Tiền Tiết Kiệm"};
 
-        videoLayout.setOnClickListener(new View.OnClickListener() {
+        Spinner spnTen = dialog.findViewById(R.id.spinnerten);
+        String ten[] = {"Ăn Uống", "Đi Lại", "Mua Sắm", "Chi tiêu Khác"};
+
+        // Tạo Adapter cho Spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, loaict);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ten);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Gắn Adapter vào Spinner
+        loai.setAdapter(adapter);
+        spnTen.setAdapter(adapter1);
+
+        // Xử lý sự kiện chọn Spinner
+        loai.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), "Bạn đã chọn: " + loaict[position], Toast.LENGTH_SHORT).show();
+            }
 
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Upload a Video is clicked",Toast.LENGTH_SHORT).show();
-
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Không làm gì nếu không có gì được chọn
             }
         });
 
-        shortsLayout.setOnClickListener(new View.OnClickListener() {
+        spnTen.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), "Bạn đã chọn: " + ten[position], Toast.LENGTH_SHORT).show();
+            }
 
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Create a short is Clicked",Toast.LENGTH_SHORT).show();
-
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Không làm gì nếu không có gì được chọn
             }
         });
 
-        liveLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Go live is Clicked",Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
+        // Hiển thị dialog
         dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable (Color.TRANSPARENT));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
+    }
 
+
+
+    // Phương thức để ẩn/hiện phần Chi tiêu
+    private void toggleExpenseSections(LinearLayout section) {
+        if (section.getVisibility() == View.GONE) {
+            section.setVisibility(View.VISIBLE);
+        } else {
+            section.setVisibility(View.GONE);
+        }
+    }
+
+    // Phương thức để ẩn/hiện phần Tiền tiết kiệm
+    private void toggleSavingSections(LinearLayout section) {
+        if (section.getVisibility() == View.GONE) {
+            section.setVisibility(View.VISIBLE);
+        } else {
+            section.setVisibility(View.GONE);
+        }
     }
     // Hàm thay thế Fragment
     private void replaceFragment(Fragment fragment) {

@@ -6,7 +6,7 @@
         
         <!--secondary brand color-->
         <item name="colorSecondary">@color/blue</item>
-        <item name="colorSecondaryVariant">@color/lime</item>
+        <item name="colorSecondaryVariant">@color/white</item>
         <item name="colorOnSecondary">@color/light_blue</item>
 
     </style>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Màu nền của nút -->
-    <solid android:color="@color/purple"/>
+    <solid android:color="@color/teal"/>
 
     <!-- Bo góc cho hình chữ nhật -->
     <corners android:radius="20dp"/>
 
     <!-- Viền màu xám -->
     <stroke
-        android:width="3dp"
+        android:width="2dp"
         android:color="@color/grey"/> <!-- Đặt màu xám cho viền -->
 </shape>

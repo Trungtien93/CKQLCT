@@ -69,11 +69,17 @@
             android:textSize="20sp" />
         <!--chọn ngày-->
         <EditText
+            android:id="@+id/edtNgay"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50sp"
             android:background="@drawable/draw_cricle"
-            tools:ignore="SpeakableTextPresentCheck"
-            android:hint="dd/mm/nn"/>
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="dd/mm/nn"
+            android:inputType="none"
+            android:textAlignment="center"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:layout_width="match_parent"

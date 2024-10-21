@@ -1,5 +1,6 @@
 package com.example.ckqlct;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,8 +12,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -34,8 +38,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Calendar;
+
 
 public class MainActivity extends AppCompatActivity {
+    EditText edtDay;
 
 
     FloatingActionButton fab;
@@ -50,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
 
         // Gán view cho DrawerLayout, Toolbar và BottomNavigationView
@@ -126,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottomsheet);
+        edtDay = dialog.findViewById(R.id.edtNgay);
 
         // Khởi tạo Spinner bên trong Dialog
         Spinner loai = dialog.findViewById(R.id.spinnerloaigd);
@@ -155,6 +166,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Không làm gì nếu không có gì được chọn
+            }
+        });
+        // Set a click listener to open the DatePickerDialog
+        edtDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the current date as default
+                Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+                // Create and show DatePickerDialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        MainActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                                // Format and set the selected date in the EditText
+                                edtDay.setText(selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+                            }
+                        },
+                        year, month, day);
+                datePickerDialog.show();
             }
         });
 

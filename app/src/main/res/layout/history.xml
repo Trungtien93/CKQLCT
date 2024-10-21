@@ -4,8 +4,8 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:background="@drawable/headerbkg">
 
         <RelativeLayout
@@ -16,61 +16,92 @@
             android:background="@color/white">
 
             <LinearLayout
-                android:layout_width="200dp"
-                android:layout_height="250dp"
-                android:layout_above="@+id/linearLayout2"
-                android:layout_marginBottom="47dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chào buổi tối,"
-                    android:textColor="@color/black"/>
-
-                
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="200dp"
-                android:layout_height="250dp"
-                android:layout_above="@+id/linearLayout2"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="-2dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginBottom="47dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chào buổi tối,"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:layout_marginBottom="3dp">
+                android:layout_height="250dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="47dp"
+                android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="text"
-                    android:textColor="@color/black"/>
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical">
 
-                <Spinner
-                    android:layout_width="200dp"
-                    android:layout_height="50dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Từ ngày"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/edtNgayTu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50sp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/draw_cricle"
+                        android:clickable="true"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:hint="dd/mm/nn"
+                        android:inputType="none"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="Đến ngày"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/edtNgayDen"
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/draw_cricle"
+                        android:clickable="true"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:hint="dd/mm/nn"
+                        android:inputType="none"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginBottom="3dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loại Giao Dịch"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <Spinner
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="20dp" />
+
+                </LinearLayout>
+
+                <!-- Chọn ngày: Đoạn TextView và EditText đầu tiên -->
+
+                <!-- Chọn ngày: Đoạn TextView và EditText thứ hai -->
 
             </LinearLayout>
 
         </RelativeLayout>
-
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

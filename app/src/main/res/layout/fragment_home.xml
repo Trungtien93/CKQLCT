@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chào buổi tối,"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/black"
                 android:textSize="18sp"/>
 
             <TextView
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nguyen Van A"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
         </LinearLayout>
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chi tiêu"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/black"
                 android:textSize="16sp"/>
 
             <TextView
@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Thu nhập"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/black"
                 android:layout_marginTop="8dp"
                 android:textSize="16sp"/>
 

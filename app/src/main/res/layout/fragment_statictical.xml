@@ -130,6 +130,7 @@
                 android:text="Thông tin cá nhân"
                 android:textSize="16sp" />
 
+
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"

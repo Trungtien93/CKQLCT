@@ -49,7 +49,7 @@ public class Login extends Activity {
         }
         username.setText(a);
         password.setText(b);
-
+//99999999
         eregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

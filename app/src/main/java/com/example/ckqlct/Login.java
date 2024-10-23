@@ -3,6 +3,8 @@ package com.example.ckqlct;
 import android.app.Activity;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,9 +14,34 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class Login extends Activity {
-    EditText username,password;
+    public static final String DATABASE_NAME = "QLCT.db";
+    SQLiteDatabase db;
+    EditText edtusername,edtpassword;
     Button eregister,elogin;
     boolean isAllFields = false;
+    private void initDB() {
+        db = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+        String sql;
+        try {
+            if (!isTableExists(db, "tbluser")) {
+                sql = "CREATE TABLE tbluser (id_user INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,";
+                sql += " username TEXT NOT NULL,";
+                sql += " password TEXT NOT NULL,";
+                sql += " email TEXT NOT NULL UNIQUE,";
+                sql += " fullname TEXT NULL,";
+                sql += " registration_date DATETIME DEFAULT (DATETIME('now')))";
+                db.execSQL(sql);
+
+                // Insert default admin user
+                sql = "INSERT INTO tbluser (username, password, email, fullname, registration_date) " +
+                        "VALUES ('admin', 'admin', 'admin@gmail.com', '', '2024-10-23')";
+                db.execSQL(sql);
+            }
+        } catch (Exception ex) {
+            Toast.makeText(this, "Khởi tạo cơ sở dữ liệu không thành công", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private boolean CheckAllField (String username, String password)
     {
         if (TextUtils.isEmpty(username)) {
@@ -32,24 +59,27 @@ public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
+        // Initialize the database
+        initDB();  // Add this line to initialize database
+
         eregister = findViewById(R.id.register1);
         elogin= findViewById(R.id.login);
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
+        edtusername = findViewById(R.id.username);
+        edtpassword = findViewById(R.id.password);
+//
+//        Intent i = getIntent();
+//        String a = " ";
+//        String b = " ";
+//        try {
+//            a = i.getStringExtra("number1");
+//            b = i.getStringExtra("number2");
+//        } catch (NumberFormatException e) {
+//            Log.d("error1", "user not give input");
+//
+//        }
+//        username.setText(a);
+//        password.setText(b);
 
-        Intent i = getIntent();
-        String a = " ";
-        String b = " ";
-        try {
-            a = i.getStringExtra("number1");
-            b = i.getStringExtra("number2");
-        } catch (NumberFormatException e) {
-            Log.d("error1", "user not give input");
-
-        }
-        username.setText(a);
-        password.setText(b);
-//99999999
         eregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,13 +95,51 @@ public class Login extends Activity {
         elogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Gọi CheckAllField để kiểm tra trước khi chuyển tiếp
-                if (CheckAllField(username.getText().toString(), password.getText().toString())) {
-                    Intent in = new Intent(Login.this, MainActivity.class);
-                    startActivity(in);
+                String username = edtusername.getText().toString();
+                String password = edtpassword.getText().toString();
+
+                if (username.isEmpty()) {
+                    Toast.makeText(getApplication(), "Vui long nhap tai khoan", Toast.LENGTH_LONG).show();
+                    edtusername.requestFocus();
+                } else if (password.isEmpty()) {
+                    Toast.makeText(getApplication(), "Vui long nhap mat khau", Toast.LENGTH_LONG).show();
+                    edtpassword.requestFocus();
+                } else if (isUser(username, password)) {
+                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplication(), "Tai khoan hoac mat khau bi sai", Toast.LENGTH_LONG).show();
                 }
             }
         });
+
+    }
+    private boolean isUser(String username, String password) {
+        try {
+            db = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+            // Truy vấn chỉ kiểm tra username và password
+            Cursor c = db.rawQuery("SELECT * FROM tbluser WHERE username = ? AND password = ?", new String[]{username, password});
+            if (c.moveToFirst()) {  // Chỉ cần kiểm tra nếu có kết quả
+                return true;  // Người dùng hợp lệ
+            }
+        } catch (Exception ex) {
+            Toast.makeText(this, "Lỗi đăng nhập", Toast.LENGTH_LONG).show();
+            Log.e("LoginError", ex.getMessage());  // In lỗi ra log để dễ theo dõi
+        }
+        return false;  // Người dùng không hợp lệ
+    }
+
+
+    private boolean isTableExists(SQLiteDatabase database, String tableName) {
+        Cursor cursor = database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name" + "= '" + tableName + "'", null);
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
     }
 
 }

@@ -1,22 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Bottom_fragment.BuyFragment">
 
-    <RelativeLayout
-        android:layout_width="500dp"
-        android:layout_height="465dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="56dp"
-        android:background="@drawable/background">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="20dp"
+            android:layout_height="71dp"
+            android:background="#FFE3E3"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="tất cả các giao dịch"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="47dp"
+            android:background="#FEF9F3"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -30,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:text="Từ ngày"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <EditText
@@ -51,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="Đến ngày"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <EditText
@@ -82,32 +102,28 @@
                     android:layout_height="wrap_content"
                     android:text="Loại Giao Dịch"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <Spinner
-                    android:id="@+id/spnloai"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/bg_item"
-                    android:textAlignment="center" />
+                    android:layout_marginTop="20dp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="tất cả các giao dịch"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="20sp" />
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
 
 
     <!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->

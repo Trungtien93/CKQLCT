@@ -106,6 +106,7 @@
                     android:textSize="20sp" />
 
                 <Spinner
+                    android:id="@+id/spnloai"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp" />

@@ -3,7 +3,6 @@ package com.example.ckqlct;
 import android.app.Activity;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -16,8 +15,6 @@ import android.widget.Toast;
 
 public class Login extends Activity {
     public static final String DATABASE_NAME = "QLCT.db";
-    private static final String PREFS_NAME = "MyPrefsFile";  // Tên file SharedPreferences
-    private static final String LOGIN_STATUS_KEY = "isLoggedIn";  // Khóa lưu trạng thái đăng nhập
     SQLiteDatabase db;
     EditText edtusername,edtpassword;
     Button eregister,elogin;
@@ -95,31 +92,23 @@ public class Login extends Activity {
             }
         });
 
-        // Kiểm tra trạng thái đăng nhập trước khi hiển thị màn hình đăng nhập
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        boolean isLoggedIn = settings.getBoolean(LOGIN_STATUS_KEY, false);
-        if (isLoggedIn) {
-            // Nếu đã đăng nhập trước đó, chuyển sang MainActivity
-            startActivity(new Intent(Login.this, MainActivity.class));
-            finish();
-        }
+        elogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = edtusername.getText().toString();
+                String password = edtpassword.getText().toString();
 
-        elogin.setOnClickListener(view -> {
-            String username = edtusername.getText().toString();
-            String password = edtpassword.getText().toString();
-
-            if (CheckAllField(username, password)) {
-                if (isUser(username, password)) {
-                    // Đăng nhập thành công, lưu trạng thái vào SharedPreferences
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean(LOGIN_STATUS_KEY, true);
-                    editor.apply();
-
-                    // Chuyển đến MainActivity
-                    startActivity(new Intent(Login.this, MainActivity.class));
-                    finish();
+                if (username.isEmpty()) {
+                    Toast.makeText(getApplication(), "Vui long nhap tai khoan", Toast.LENGTH_LONG).show();
+                    edtusername.requestFocus();
+                } else if (password.isEmpty()) {
+                    Toast.makeText(getApplication(), "Vui long nhap mat khau", Toast.LENGTH_LONG).show();
+                    edtpassword.requestFocus();
+                } else if (isUser(username, password)) {
+                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
                 } else {
-                    Toast.makeText(Login.this, "Tên người dùng hoặc mật khẩu không chính xác", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplication(), "Tai khoan hoac mat khau bi sai", Toast.LENGTH_LONG).show();
                 }
             }
         });

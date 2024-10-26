@@ -2,7 +2,9 @@ package com.example.ckqlct;
 
 import android.app.Activity;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -66,19 +68,7 @@ public class Login extends Activity {
         elogin= findViewById(R.id.login);
         edtusername = findViewById(R.id.username);
         edtpassword = findViewById(R.id.password);
-//
-//        Intent i = getIntent();
-//        String a = " ";
-//        String b = " ";
-//        try {
-//            a = i.getStringExtra("number1");
-//            b = i.getStringExtra("number2");
-//        } catch (NumberFormatException e) {
-//            Log.d("error1", "user not give input");
-//
-//        }
-//        username.setText(a);
-//        password.setText(b);
+
 
         eregister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +95,10 @@ public class Login extends Activity {
                     Toast.makeText(getApplication(), "Vui long nhap mat khau", Toast.LENGTH_LONG).show();
                     edtpassword.requestFocus();
                 } else if (isUser(username, password)) {
+//                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("username", username);  // Save the username
+//                    editor.apply();
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
                 } else {
@@ -117,17 +111,61 @@ public class Login extends Activity {
     private boolean isUser(String username, String password) {
         try {
             db = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-            // Truy vấn chỉ kiểm tra username và password
-            Cursor c = db.rawQuery("SELECT * FROM tbluser WHERE username = ? AND password = ?", new String[]{username, password});
-            if (c.moveToFirst()) {  // Chỉ cần kiểm tra nếu có kết quả
-                return true;  // Người dùng hợp lệ
+            // Update the query to fetch id_user, fullname, and email
+            Cursor c = db.rawQuery("SELECT id_user, fullname, email FROM tbluser WHERE username = ? AND password = ?", new String[]{username, password});
+
+            if (c.moveToFirst()) {
+                // Get the indices for the columns
+                int userIdIndex = c.getColumnIndex("id_user");
+                int fullnameIndex = c.getColumnIndex("fullname");
+                int emailIndex = c.getColumnIndex("email");
+
+                if (userIdIndex == -1 || fullnameIndex == -1 || emailIndex == -1) {
+                    Toast.makeText(this, "Error retrieving user information.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                // User is valid, retrieve user ID and other details
+                int userId = c.getInt(userIdIndex);
+                String fullname = c.getString(fullnameIndex);
+                String email = c.getString(emailIndex);
+
+                // Store user information in SharedPreferences
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("id_user", userId);
+                editor.putString("fullname", fullname);
+                editor.putString("email", email);
+                editor.apply();
+
+                return true;  // User is valid
+            } else {
+                Toast.makeText(this, "Invalid username or password.", Toast.LENGTH_LONG).show();
             }
         } catch (Exception ex) {
-            Toast.makeText(this, "Lỗi đăng nhập", Toast.LENGTH_LONG).show();
-            Log.e("LoginError", ex.getMessage());  // In lỗi ra log để dễ theo dõi
+            Toast.makeText(this, "Login error: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("LoginError", ex.getMessage());
         }
-        return false;  // Người dùng không hợp lệ
+        return false;  // User is not valid
     }
+
+
+
+
+//    private boolean isUser(String username, String password) {
+//        try {
+//            db = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+//            // Truy vấn chỉ kiểm tra username và password
+//            Cursor c = db.rawQuery("SELECT * FROM tbluser WHERE username = ? AND password = ?", new String[]{username, password});
+//            if (c.moveToFirst()) {  // Chỉ cần kiểm tra nếu có kết quả
+//                return true;  // Người dùng hợp lệ
+//            }
+//        } catch (Exception ex) {
+//            Toast.makeText(this, "Lỗi đăng nhập", Toast.LENGTH_LONG).show();
+//            Log.e("LoginError", ex.getMessage());  // In lỗi ra log để dễ theo dõi
+//        }
+//        return false;  // Người dùng không hợp lệ
+//    }
 
 
     private boolean isTableExists(SQLiteDatabase database, String tableName) {

@@ -45,7 +45,7 @@
             app:layout_constraintTop_toBottomOf="@id/profile_image" />
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/edithoten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -65,7 +65,7 @@
 
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/editmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

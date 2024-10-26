@@ -1,6 +1,8 @@
 package com.example.ckqlct.Bottom_fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -74,6 +76,12 @@ public class StaticticalFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statictical, container, false);
 
         // Initialize views from the fragment's layout
+        TextView ten = view.findViewById(R.id.txtTitle);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String fullname = sharedPreferences.getString("fullname", "Guest");  // Default to "Guest" if no username found
+
+        ten.setText(fullname);  // Display the username
         thongtin = view.findViewById(R.id.txtPersonalInfo);
         thongtin.setOnClickListener(new View.OnClickListener() {
             @Override

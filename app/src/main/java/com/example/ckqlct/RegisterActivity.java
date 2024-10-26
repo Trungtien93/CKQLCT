@@ -41,25 +41,6 @@ public class RegisterActivity extends Activity {
             }
         });
 
-//        register.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view)
-//
-//            {
-//                isAllFields= register();
-//                if(isAllFields)
-//                {
-//
-//                    String a= eusername.getText().toString();
-//                    String b = epassword.getText().toString();
-//                    Intent i = new Intent(RegisterActivity.this,MainActivity.class);
-//                    i.putExtra("number1",a);
-//                    i.putExtra("number2",b);
-//                    startActivity(i);
-//
-//                }
-//            }
-//        });
 
 
     }

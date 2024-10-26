@@ -1,14 +1,24 @@
 package com.example.ckqlct.Bottom_fragment;
 
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.example.ckqlct.Login;
+import com.example.ckqlct.Nav_fragment.AccountFragment;
+import com.example.ckqlct.Nav_fragment.SettingsFragment;
 import com.example.ckqlct.R;
+import com.example.ckqlct.RegisterActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +57,7 @@ public class StaticticalFragment extends Fragment {
         fragment.setArguments (args);
         return fragment;
     }
-
+    TextView thongtin ;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
@@ -61,6 +71,32 @@ public class StaticticalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate (R.layout.fragment_statictical, container, false);
+        View view = inflater.inflate(R.layout.fragment_statictical, container, false);
+
+        // Initialize views from the fragment's layout
+        thongtin = view.findViewById(R.id.txtPersonalInfo);
+        thongtin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Tạo instance của SettingsFragment
+                SettingsFragment settingsFragment = new SettingsFragment();
+
+                // Bắt đầu một giao dịch fragment
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Thay thế (replace) StaticticalFragment bằng SettingsFragment
+                transaction.replace(R.id.frament_layout, settingsFragment);
+
+                // Thêm vào back stack để người dùng có thể quay lại nếu cần
+                transaction.addToBackStack(null);
+
+                // Hoàn tất giao dịch
+                transaction.commit();
+            }
+        });
+        SQLiteDatabase db;
+        EditText eusername, eemail;
+        Button updatethongtin, btnexit;
+        return view;
     }
 }

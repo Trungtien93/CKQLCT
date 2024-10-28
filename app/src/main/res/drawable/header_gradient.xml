@@ -1,0 +1,23 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Gradient từ màu #12c2e9 đến màu #c471ed -->
+            <gradient
+                android:startColor="#12c2e9"
+                android:endColor="#c471ed"
+                android:angle="45"/>
+            <!-- Bo góc để tạo cảm giác mềm mại -->
+            <corners android:radius="16dp"/>
+        </shape>
+    </item>
+
+    <!-- Bạn có thể thêm hiệu ứng đổ bóng nếu muốn -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00000000"/> <!-- Màu trong suốt -->
+            <corners android:radius="16dp"/>
+        </shape>
+    </item>
+
+</layer-list>

@@ -1,14 +1,17 @@
 package com.example.ckqlct.Bottom_fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.ckqlct.Changepass;
 import com.example.ckqlct.R;
+import com.example.ckqlct.Rating;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +60,35 @@ public class StaticticalFragment extends Fragment {
         }
     }
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+//        return inflater.inflate (R.layout.fragment_statictical, container, false);
+//
+//    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate (R.layout.fragment_statictical, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_statictical, container, false);
+
+        TextView txtChangeArea = view.findViewById(R.id.txtChangeArea);
+        TextView txtRateApp = view.findViewById(R.id.txtRateApp);
+        // Đặt sự kiện OnClickListener cho mục "Thay đổi mật khẩu"
+        txtChangeArea.setOnClickListener(v -> {
+            // Khởi động ChangePasswordActivity
+            Intent intent = new Intent(getActivity(), Changepass.class);
+            startActivity(intent);
+        });
+        // Đặt sự kiện OnClickListener cho mục "Đánh giá ứng dụng"
+        txtRateApp.setOnClickListener (v ->{
+            Intent intent = new Intent (getActivity (), Rating.class);
+            startActivity (intent);
+        });
+
+        return view;
     }
+
+
+
 }

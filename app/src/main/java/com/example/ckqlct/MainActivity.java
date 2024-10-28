@@ -16,7 +16,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -57,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
 
 
         // Gán view cho DrawerLayout, Toolbar và BottomNavigationView
@@ -135,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     private void showBottomDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.bottomsheet);
+        dialog.setContentView(R.layout.activity_transaction);
         edtDay = dialog.findViewById(R.id.edtNgay);
 
         // Khởi tạo Spinner bên trong Dialog

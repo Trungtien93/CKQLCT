@@ -1,5 +1,10 @@
 package com.example.ckqlct.Bottom_fragment;
 
+import static com.example.ckqlct.Login.DATABASE_NAME;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +16,7 @@ import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
     TextView greetingText;
+    private SQLiteDatabase db;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -39,10 +45,17 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        TextView ten = view.findViewById(R.id.userName);
         // Find the TextView after the layout is inflated
         greetingText = view.findViewById(R.id.greetingText);
+        // Initialize views from the fragment's layout
 
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String fullname = sharedPreferences.getString("fullname", "Guest");  // Default to "Guest" if no username found
+
+        ten.setText(fullname);  // Display the username
+        // Initialize the database
+        db = getActivity().openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
         // Set the greeting message based on the time of day
         Calendar calendar = Calendar.getInstance();
         int time = calendar.get(Calendar.HOUR_OF_DAY);

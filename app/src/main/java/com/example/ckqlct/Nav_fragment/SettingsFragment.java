@@ -2,6 +2,7 @@ package com.example.ckqlct.Nav_fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.ckqlct.Login;
+import com.example.ckqlct.Notify;
 import com.example.ckqlct.R;
 
 public class SettingsFragment extends Fragment {
@@ -18,7 +22,7 @@ public class SettingsFragment extends Fragment {
     private EditText ten, email;
     private Button btnUpdate, btnExit;
     private SQLiteDatabase db;
-    private static final String DATABASE_NAME = "QLCT.db";
+    private static final String DATABASE_NAME = "QLCTCK.db";
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -47,17 +51,11 @@ public class SettingsFragment extends Fragment {
         btnUpdate = view.findViewById(R.id.btn_edit_profile);
         btnExit = view.findViewById(R.id.btn_logout);
 
-        // Load user data from SharedPreferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        String currentFullname = sharedPreferences.getString("fullname", "");
-        String currentEmail = sharedPreferences.getString("email", "");
-
-        // Set initial values in EditText fields
-        ten.setText(currentFullname);
-        email.setText(currentEmail);
-
         // Initialize the database
         db = getActivity().openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
+
+        // Load user data from the database based on id_user
+        loadUserData();
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +70,7 @@ public class SettingsFragment extends Fragment {
                     updateUserInfo(newFullname, newEmail);
 
                     // Update SharedPreferences
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("fullname", newFullname);
                     editor.putString("email", newEmail);
@@ -86,21 +85,43 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Handle logout or exit action
-                getActivity().finish();
+               getActivity().finish();
             }
         });
-
         return view;
+    }
+
+    // Method to load user data from the database
+    private void loadUserData() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("id_user", -1);
+
+        if (userId != -1) {
+            Cursor cursor = db.rawQuery("SELECT fullname, email FROM User WHERE id_user = ?", new String[]{String.valueOf(userId)});
+            if (cursor.moveToFirst()) {
+                String currentFullname = cursor.getString(0);
+                String currentEmail = cursor.getString(1);
+
+                // Set initial values in EditText fields
+                ten.setText(currentFullname);
+                email.setText(currentEmail);
+            } else {
+                Toast.makeText(getActivity(), "User data not found", Toast.LENGTH_SHORT).show();
+            }
+            cursor.close();
+        } else {
+            Toast.makeText(getActivity(), "User ID not found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void updateUserInfo(String fullname, String email) {
         try {
             // Fetch user ID from SharedPreferences
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             int userId = sharedPreferences.getInt("id_user", -1);  // Retrieve id_user
 
             if (userId != -1) {
-                String updateQuery = "UPDATE tbluser SET fullname = ?, email = ? WHERE id_user = ?";
+                String updateQuery = "UPDATE User SET fullname = ?, email = ? WHERE id_user = ?";
                 db.execSQL(updateQuery, new Object[]{fullname, email, userId});
             } else {
                 Toast.makeText(getActivity(), "User ID not found", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,8 @@
 package com.example.ckqlct.Bottom_fragment;
 
-import static com.example.ckqlct.Login.DATABASE_NAME;
+//import static com.example.ckqlct.Login.DATABASE_NAME;
+
+//import static com.example.ckqlct.DatabaseHelper.DATABASE_NAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +19,7 @@ import java.util.Calendar;
 public class HomeFragment extends Fragment {
     TextView greetingText;
     private SQLiteDatabase db;
+    private String DATABASE_NAME = "QLCTCK.db";
 
     public HomeFragment() {
         // Required empty public constructor
@@ -41,22 +44,19 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         TextView ten = view.findViewById(R.id.userName);
-        // Find the TextView after the layout is inflated
         greetingText = view.findViewById(R.id.greetingText);
-        // Initialize views from the fragment's layout
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        String fullname = sharedPreferences.getString("fullname", "Guest");  // Default to "Guest" if no username found
+        // Lấy fullname từ SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String fullname = sharedPreferences.getString("fullname", "Guest"); // Mặc định là "Guest" nếu không tìm thấy fullname
 
-        ten.setText(fullname);  // Display the username
-        // Initialize the database
-        db = getActivity().openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
-        // Set the greeting message based on the time of day
+        ten.setText(fullname);  // Hiển thị fullname
+
+    // Set the greeting message based on the time of day
         Calendar calendar = Calendar.getInstance();
         int time = calendar.get(Calendar.HOUR_OF_DAY);
         if (time >= 0 && time < 12) {

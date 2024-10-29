@@ -1,94 +1,112 @@
 package com.example.ckqlct.Bottom_fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ckqlct.Changepass;
+import com.example.ckqlct.Nav_fragment.SettingsFragment;
 import com.example.ckqlct.R;
 import com.example.ckqlct.Rating;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StaticticalFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class StaticticalFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView ten, txtChangeArea, txtRateApp;
+    private SQLiteDatabase db;
+    private SharedPreferences sharedPreferences;
 
     public StaticticalFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment StaticticalFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static StaticticalFragment newInstance(String param1, String param2) {
-        StaticticalFragment fragment = new StaticticalFragment ();
-        Bundle args = new Bundle ();
-        args.putString (ARG_PARAM1, param1);
-        args.putString (ARG_PARAM2, param2);
-        fragment.setArguments (args);
+        StaticticalFragment fragment = new StaticticalFragment();
+        Bundle args = new Bundle();
+        args.putString("param1", param1);
+        args.putString("param2", param2);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate (savedInstanceState);
-        if (getArguments () != null) {
-            mParam1 = getArguments ().getString (ARG_PARAM1);
-            mParam2 = getArguments ().getString (ARG_PARAM2);
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            String mParam1 = getArguments().getString("param1");
+            String mParam2 = getArguments().getString("param2");
         }
     }
-
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate (R.layout.fragment_statictical, container, false);
-//
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_statictical, container, false);
 
-        TextView txtChangeArea = view.findViewById(R.id.txtChangeArea);
-        TextView txtRateApp = view.findViewById(R.id.txtRateApp);
-        // Đặt sự kiện OnClickListener cho mục "Thay đổi mật khẩu"
+        // Initialize views from the fragment's layout
+        ten = view.findViewById(R.id.txtTitle);
+        txtChangeArea = view.findViewById(R.id.txtChangeArea);
+        txtRateApp = view.findViewById(R.id.txtRateApp);
+        TextView thongtin = view.findViewById(R.id.txtPersonalInfo);
+
+        // Initialize SharedPreferences and database
+        sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        db = getActivity().openOrCreateDatabase("QLCTCK.db", Context.MODE_PRIVATE, null);
+
+        // Load fullname from database if not in SharedPreferences
+        String fullname = sharedPreferences.getString("fullname", null);
+        if (fullname == null) {
+            int userId = sharedPreferences.getInt("id_user", -1);  // Get user ID
+            if (userId != -1) {
+                Cursor cursor = db.rawQuery("SELECT fullname FROM User WHERE id_user = ?", new String[]{String.valueOf(userId)});
+                if (cursor.moveToFirst()) {
+                    fullname = cursor.getString(0);
+                    // Save fullname to SharedPreferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("fullname", fullname);
+                    editor.apply();
+                }
+                cursor.close();
+            }
+        }
+
+        // Display fullname in the TextView
+        ten.setText(fullname != null ? fullname : "Guest");
+
+        // Navigate to SettingsFragment when "Personal Info" is clicked
+        thongtin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingsFragment settingsFragment = new SettingsFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.frament_layout, settingsFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        // Set up onClick listeners for Change Password and Rate App
         txtChangeArea.setOnClickListener(v -> {
-            // Khởi động ChangePasswordActivity
             Intent intent = new Intent(getActivity(), Changepass.class);
             startActivity(intent);
         });
-        // Đặt sự kiện OnClickListener cho mục "Đánh giá ứng dụng"
-        txtRateApp.setOnClickListener (v ->{
-            Intent intent = new Intent (getActivity (), Rating.class);
-            startActivity (intent);
+
+        txtRateApp.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), Rating.class);
+            startActivity(intent);
         });
 
         return view;
     }
-
-
-
 }

@@ -50,13 +50,14 @@ public class Login extends Activity {
                 edtPassword.requestFocus();
             } else {
                 int id = isUser(username, password);
-                if(id != -1){
+                if (id != -1) {
                     SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isLoggedIn", true); // Đặt trạng thái đăng nhập
-                    editor.putInt ("isUser", id); // Lưu tên người dùng
+                    editor.putInt("id_user", id); // Lưu id_user
                     editor.apply();
 
+                    Log.d("Login", "Login successful. User ID: " + id); // Kiểm tra ID người dùng
 
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
@@ -73,13 +74,24 @@ public class Login extends Activity {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT * FROM User WHERE user_name = ? AND pass_word = ?", new String[]{username, password});
-            if(cursor.moveToFirst ())
-                return cursor.getInt (0);// Người dùng hợp lệ
+            cursor = db.rawQuery("SELECT id_user, fullname FROM User WHERE user_name = ? AND pass_word = ?", new String[]{username, password});
+            if (cursor.moveToFirst()) {
+                int userId = cursor.getInt(0);
+                String fullname = cursor.getString(1); // Lấy fullname từ kết quả truy vấn
+
+                // Lưu fullname và id_user vào SharedPreferences sau khi đăng nhập
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isLoggedIn", true);
+                editor.putInt("id_user", userId);
+                editor.putString("fullname", fullname); // Lưu fullname vào SharedPreferences
+                editor.apply();
+
+                return userId; // Trả về id_user
+            }
         } catch (Exception e) {
             Toast.makeText(this, "Lỗi đăng nhập", Toast.LENGTH_LONG).show();
             Log.e("LoginError", e.getMessage());
-            return -1;
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -87,4 +99,5 @@ public class Login extends Activity {
         }
         return -1;
     }
+
 }

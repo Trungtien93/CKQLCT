@@ -75,7 +75,6 @@ public class Transaction extends AppCompatActivity {
         });
 
 
-
         // Xử lý sự kiện cho nút "Xóa"
         btnXoa.setOnClickListener(new View.OnClickListener() {
             @Override

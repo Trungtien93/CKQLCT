@@ -7,17 +7,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 
 public class Rating extends AppCompatActivity {
 
     private EditText edtGhichu;
     private Button btnThem, btnClear;
     private DatabaseHelper dbHelper;
+    ListView lstRating;
     private SQLiteDatabase db; // Để truy cập cơ sở dữ liệu
 
     @Override
@@ -33,31 +38,34 @@ public class Rating extends AppCompatActivity {
         edtGhichu = findViewById(R.id.edtGhichu);
         btnThem = findViewById(R.id.btnThem);
         btnClear = findViewById(R.id.btnClear);
+        lstRating = findViewById(R.id.lstRating);
+
+        // Load dữ liệu khi khởi động
+        loadRatings();
 
         // Xử lý sự kiện cho nút "Gửi"
         btnThem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                int userId = preferences.getInt("isUser", -1);  // -1 if not logged in
+                int userId = preferences.getInt("id_user", -1);  // -1 if not logged in
+
                 if (userId != -1) {
                     String userName = getUserName(userId); // Lấy user_name từ cơ sở dữ liệu
 
                     if (userName != null) {
                         ContentValues values = new ContentValues();
                         values.put("id_user", userId);
-                        values.put("user_name", userName); // Sử dụng user_name lấy từ cơ sở dữ liệu
+                        values.put("user_name", userName);
                         values.put("note", edtGhichu.getText().toString());
 
-                        // Chèn dữ liệu vào cơ sở dữ liệu
                         long result = db.insert("Rating", null, values);
 
-                        // Kiểm tra nếu thêm thành công
                         if (result != -1) {
-                            // Hiển thị thông báo cảm ơn
                             Toast.makeText(Rating.this, "Cảm ơn bạn đã đánh giá!", Toast.LENGTH_SHORT).show();
+                            edtGhichu.setText(""); // Clear the input field
+                            loadRatings(); // Refresh the list
                         } else {
-                            // Thông báo lỗi nếu thêm không thành công
                             Toast.makeText(Rating.this, "Đã xảy ra lỗi. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -73,13 +81,14 @@ public class Rating extends AppCompatActivity {
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 clearFields();
             }
         });
     }
 
     // Phương thức để lấy user_name từ bảng User
-    @SuppressLint ("Range")
+    @SuppressLint("Range")
     private String getUserName(int userId) {
         String userName = null;
         String query = "SELECT user_name FROM User WHERE id_user = ?";
@@ -93,9 +102,31 @@ public class Rating extends AppCompatActivity {
         }
         return userName;
     }
-
     // Phương thức để xóa các trường nhập
     private void clearFields() {
+
         edtGhichu.setText("");
     }
+    // Phương thức để tải và hiển thị đánh giá trong ListView
+    @SuppressLint("Range")
+    private void loadRatings() {
+        ArrayList<RatingItem> ratingList = new ArrayList<>();
+        String query = "SELECT user_name, note, time FROM Rating ORDER BY time DESC";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String userName = cursor.getString(cursor.getColumnIndex("user_name"));
+                String note = cursor.getString(cursor.getColumnIndex("note"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                ratingList.add(new RatingItem(userName, note, time));
+            }
+            cursor.close();
+        }
+
+        // Sử dụng RatingAdapter để hiển thị dữ liệu
+        RatingAdapter adapter = new RatingAdapter(this, ratingList);
+        lstRating.setAdapter(adapter);
+    }
+
 }

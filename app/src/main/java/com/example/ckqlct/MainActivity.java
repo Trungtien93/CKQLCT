@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -126,13 +127,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-
+    private void clearFields() {
+        edtTongTien.setText("");
+        edtGhichu.setText("");
+    }
+    private Spinner spinnerLoaiGD, spinnerTenGD;
+    private EditText edtTongTien, edtNgay, edtGhichu;
+    private Button btnThem, btnXoa, btnDong;
     private void showBottomDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.activity_transaction);
         edtDay = dialog.findViewById(R.id.edtNgay);
+        // Khởi tạo view
+       // spinnerLoaiGD = dialog.findViewById(R.id.spinnerloaigd);
+      //  spinnerTenGD = dialog.findViewById(R.id.spinnerten);
+        edtTongTien = dialog.findViewById(R.id.edtTongTien);
+        edtGhichu = dialog.findViewById(R.id.edtGhichu);
+        btnThem = dialog.findViewById(R.id.btnThem);
+        btnXoa = dialog.findViewById(R.id.btnxoa);
+        btnDong = dialog.findViewById(R.id.btndong);
 
         // Khởi tạo Spinner bên trong Dialog
         Spinner loai = dialog.findViewById(R.id.spinnerloaigd);
@@ -186,6 +200,20 @@ public class MainActivity extends AppCompatActivity {
                         },
                         year, month, day);
                 datePickerDialog.show();
+            }
+        });
+        // Xử lý sự kiện cho nút "Đóng"
+        btnDong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {;
+                finish(); // Đóng activity
+            }
+        });
+        // Xử lý sự kiện cho nút "Xóa"
+        btnXoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearFields();
             }
         });
 

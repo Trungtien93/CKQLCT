@@ -1,7 +1,5 @@
 package com.example.ckqlct;
 
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -17,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "id_user INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "user_name NVARCHAR(50) NOT NULL UNIQUE, " +
             "pass_word NVARCHAR(255) NOT NULL, " +
-            "fullname NVARCHAR(100),"+
+            "fullname NVARCHAR(100), " +
             "email NVARCHAR(100) NOT NULL UNIQUE, " +
             "datetime DATETIME DEFAULT CURRENT_TIMESTAMP" +
             ");";
@@ -31,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(id_user) REFERENCES User(id_user)" +
             ");";
 
-    private static final String CREATE_TABLE_TRANSACTION = "CREATE TABLE Transaction1 (" +
+    private static final String CREATE_TABLE_HISTORY_TRANSACTION = "CREATE TABLE HistoryTransaction (" +
             "id_transaction INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "id_user INTEGER, " +
             "transaction_type NVARCHAR(20) NOT NULL, " +
@@ -42,24 +40,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(id_user) REFERENCES User(id_user)" +
             ");";
 
+    // Bảng loại thu nhập
+    private static final String CREATE_TABLE_INCOME_TYPE = "CREATE TABLE Income_Type (" +
+            "incomeType_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "income_type NVARCHAR(50) NOT NULL, " +
+            "income_name NVARCHAR(100) NOT NULL" +
+            ");";
+
+    // Bảng loại chi tiêu
+    private static final String CREATE_TABLE_EXPENSE_TYPE = "CREATE TABLE Expense_Type (" +
+            "expenseType_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "expense_type NVARCHAR(50) NOT NULL, " +
+            "expense_name NVARCHAR(100) NOT NULL" +
+            ");";
+
+    // Bảng thu nhập
     private static final String CREATE_TABLE_INCOME = "CREATE TABLE Income (" +
             "id_income INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "id_user INTEGER, " +
-            "income_type NVARCHAR(50) NOT NULL, " +
-            "income_name NVARCHAR(100) NOT NULL, " +
+            "incomeType_id INTEGER, " +
             "income_total DECIMAL(18, 2) NOT NULL, " +
             "datetime DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY(id_user) REFERENCES User(id_user)" +
+            "note NVARCHAR(255), " +
+            "FOREIGN KEY(id_user) REFERENCES User(id_user), " +
+            "FOREIGN KEY(incomeType_id) REFERENCES Income_Type(incomeType_id)" +
             ");";
 
+    // Bảng chi tiêu
     private static final String CREATE_TABLE_EXPENSE = "CREATE TABLE Expense (" +
             "id_expense INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "id_user INTEGER, " +
-            "expense_type NVARCHAR(50) NOT NULL, " +
-            "expense_name NVARCHAR(100) NOT NULL, " +
+            "expenseType_id INTEGER, " +
             "expense_total DECIMAL(18, 2) NOT NULL, " +
             "datetime DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY(id_user) REFERENCES User(id_user)" +
+            "note NVARCHAR(255), " +
+            "FOREIGN KEY(id_user) REFERENCES User(id_user), " +
+            "FOREIGN KEY(expenseType_id) REFERENCES Expense_Type(expenseType_id)" +
             ");";
 
     private static final String CREATE_TABLE_PASSWORD_CHANGE = "CREATE TABLE Passwordchange (" +
@@ -93,27 +109,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public long addTransaction(int userId, String transactionType, String transactionName, double totalAmount, String date, String note) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues ();
-        values.put("id_user", userId);
-        values.put("transaction_type", transactionType);
-        values.put("transaction_name", transactionName);
-        values.put("transaction_total", totalAmount);
-        values.put("datetime", date);
-        values.put("transaction_note", note);
-
-        // Chèn dữ liệu vào cơ sở dữ liệu và trả về kết quả
-        return db.insert("Transaction1", null, values);
-    }
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Tạo các bảng khi cơ sở dữ liệu được tạo
         db.execSQL(CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_RATING);
-        db.execSQL(CREATE_TABLE_TRANSACTION);
+        db.execSQL(CREATE_TABLE_HISTORY_TRANSACTION);
+        db.execSQL(CREATE_TABLE_INCOME_TYPE);
+        db.execSQL(CREATE_TABLE_EXPENSE_TYPE);
         db.execSQL(CREATE_TABLE_INCOME);
         db.execSQL(CREATE_TABLE_EXPENSE);
         db.execSQL(CREATE_TABLE_PASSWORD_CHANGE);
@@ -126,7 +129,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Xóa các bảng và tạo lại nếu phiên bản cơ sở dữ liệu thay đổi
         db.execSQL("DROP TABLE IF EXISTS User");
         db.execSQL("DROP TABLE IF EXISTS Rating");
-        db.execSQL("DROP TABLE IF EXISTS Transaction1");
+        db.execSQL("DROP TABLE IF EXISTS HistoryTransaction");
+        db.execSQL("DROP TABLE IF EXISTS Income_Type");
+        db.execSQL("DROP TABLE IF EXISTS Expense_Type");
         db.execSQL("DROP TABLE IF EXISTS Income");
         db.execSQL("DROP TABLE IF EXISTS Expense");
         db.execSQL("DROP TABLE IF EXISTS Passwordchange");
@@ -134,6 +139,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Version");
         onCreate(db);
     }
-
-
 }

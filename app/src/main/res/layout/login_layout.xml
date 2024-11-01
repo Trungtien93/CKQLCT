@@ -9,16 +9,15 @@
     tools:context=".Login">
 
     <TextView
+        android:id="@+id/signin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/signin"
+        android:layout_margin="20dp"
+        android:gravity="center"
         android:text="Sign In"
         android:textColor="@color/black"
         android:textSize="35dp"
-        android:layout_margin="50dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
@@ -67,7 +66,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/design_default_color_on_secondary"
         android:text="LOGIN"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/forget"
@@ -83,22 +82,22 @@
 
     <Button
         android:id="@+id/register1"
-        android:layout_width="395dp"
-        android:layout_height="59dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/login"
         android:layout_alignParentBottom="true"
 
 
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="227dp"
-        android:layout_marginBottom="58dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="-94dp"
+
+        android:layout_marginBottom="409dp"
         android:background="?android:attr/selectableItemBackground"
 
         android:text="Need an Account? Sign up"
         android:textAllCaps="true"
-
-        android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textColor="@color/red"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
 

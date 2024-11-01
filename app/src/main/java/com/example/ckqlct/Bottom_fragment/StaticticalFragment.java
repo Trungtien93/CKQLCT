@@ -21,6 +21,7 @@ import com.example.ckqlct.Changepass;
 import com.example.ckqlct.Nav_fragment.SettingsFragment;
 import com.example.ckqlct.R;
 import com.example.ckqlct.Rating;
+import com.example.ckqlct.ThemChiTieu;
 
 public class StaticticalFragment extends Fragment {
 
@@ -59,6 +60,7 @@ public class StaticticalFragment extends Fragment {
         txtChangeArea = view.findViewById(R.id.txtChangeArea);
         txtRateApp = view.findViewById(R.id.txtRateApp);
         TextView thongtin = view.findViewById(R.id.txtPersonalInfo);
+        TextView Caidat = view.findViewById(R.id.txtSettings);
 
         // Initialize SharedPreferences and database
         sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -104,6 +106,10 @@ public class StaticticalFragment extends Fragment {
 
         txtRateApp.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), Rating.class);
+            startActivity(intent);
+        });
+        Caidat.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ThemChiTieu.class);
             startActivity(intent);
         });
 

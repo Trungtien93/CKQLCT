@@ -33,6 +33,9 @@
         <activity android:name=".Expense"></activity>
         <activity android:name=".Statistical"></activity>
         <activity android:name=".Version"></activity>
+        <activity android:name=".ChiTieu"></activity>
+        <activity android:name=".ThemChiTieu"></activity>
+
 
     </application>
 

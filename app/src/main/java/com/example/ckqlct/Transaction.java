@@ -1,5 +1,6 @@
 package com.example.ckqlct;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Transaction extends AppCompatActivity {
+public class Transaction extends Activity {
 
     private Spinner spinnerLoaiGD, spinnerTenGD;
     private EditText edtTongTien, edtNgay, edtGhichu;
@@ -38,41 +39,41 @@ public class Transaction extends AppCompatActivity {
         btnXoa = findViewById(R.id.btnxoa);
         btnDong = findViewById(R.id.btndong);
 
-        btnThem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                int userId = preferences.getInt("isUser", -1);
-
-                if (userId != -1) {
-                    String transactionType = spinnerLoaiGD.getSelectedItem().toString();
-                    String transactionName = spinnerTenGD.getSelectedItem().toString();
-                    String totalAmount = edtTongTien.getText().toString();
-                    String date = edtNgay.getText().toString();
-                    String note = edtGhichu.getText().toString();
-
-                    if (validateFields(totalAmount, date)) {
-                        try {
-                            // Thay đổi parse cho tổng tiền
-                            double amount = Double.parseDouble(totalAmount);
-
-                            // Gọi phương thức thêm trong DatabaseHelper
-                            long result = dbHelper.addTransaction(userId, transactionType, transactionName, amount, date, note);
-
-                            if (result != -1) {
-                                Toast.makeText(Transaction.this, "Thêm giao dịch thành công!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(Transaction.this, "Lỗi khi thêm giao dịch. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(Transaction.this, "Tổng tiền không hợp lệ. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
-                    Toast.makeText(Transaction.this, "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        btnThem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+//                int userId = preferences.getInt("isUser", -1);
+//
+//                if (userId != -1) {
+//                    String transactionType = spinnerLoaiGD.getSelectedItem().toString();
+//                    String transactionName = spinnerTenGD.getSelectedItem().toString();
+//                    String totalAmount = edtTongTien.getText().toString();
+//                    String date = edtNgay.getText().toString();
+//                    String note = edtGhichu.getText().toString();
+//
+//                    if (validateFields(totalAmount, date)) {
+//                        try {
+//                            // Thay đổi parse cho tổng tiền
+//                            double amount = Double.parseDouble(totalAmount);
+//
+//                            // Gọi phương thức thêm trong DatabaseHelper
+//                            long result = dbHelper.addTransaction(userId, transactionType, transactionName, amount, date, note);
+//
+//                            if (result != -1) {
+//                                Toast.makeText(Transaction.this, "Thêm giao dịch thành công!", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(Transaction.this, "Lỗi khi thêm giao dịch. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (NumberFormatException e) {
+//                            Toast.makeText(Transaction.this, "Tổng tiền không hợp lệ. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                } else {
+//                    Toast.makeText(Transaction.this, "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
 
         // Xử lý sự kiện cho nút "Xóa"
@@ -87,6 +88,7 @@ public class Transaction extends AppCompatActivity {
         btnDong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 finish(); // Đóng activity
             }
         });

@@ -83,16 +83,28 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/txtThang"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chi tiêu"
-                android:textColor="@color/black"
+                android:text=""
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1.038.000đ"
+                android:text="Chi tiêu"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtchiTieu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:textSize="20sp" />
@@ -100,10 +112,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thu nhập"
-                android:textColor="@color/black"
                 android:layout_marginTop="8dp"
-                android:textSize="16sp" />
+                android:text="Thu nhập"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -143,50 +156,55 @@
             android:layout_marginBottom="8dp" />
 
         <!-- Item giao dịch -->
-        <LinearLayout
+        <ListView
+            android:id="@+id/lstHome"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:elevation="2dp"
-            android:background="@drawable/transaction_item_background"
-            android:layout_marginBottom="8dp">
+            android:layout_height="wrap_content" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_walletsave" />
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:padding="8dp"-->
+<!--            android:elevation="2dp"-->
+<!--            android:background="@drawable/transaction_item_background"-->
+<!--            android:layout_marginBottom="8dp">-->
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp">
+<!--            <ImageView-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:src="@drawable/ic_walletsave" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thu nhập từ cho thuê"
-                    android:textColor="#333333"
-                    android:textSize="16sp" />
+<!--            <LinearLayout-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingStart="16dp">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="04 Thg 06, 2024"
-                    android:textColor="#999999"
-                    android:textSize="14sp" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Thu nhập từ cho thuê"-->
+<!--                    android:textColor="#333333"-->
+<!--                    android:textSize="16sp" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3.500.000đ"
-                android:textColor="#333333"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-        </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="04 Thg 06, 2024"-->
+<!--                    android:textColor="#999999"-->
+<!--                    android:textSize="14sp" />-->
+<!--            </LinearLayout>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="3.500.000đ"-->
+<!--                android:textColor="#333333"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textSize="16sp" />-->
+<!--        </LinearLayout>-->
 
         <!-- Thêm các item giao dịch khác tương tự -->
     </LinearLayout>

@@ -59,7 +59,7 @@ public class BuyFragment extends Fragment {
         loai.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int userId = sharedPreferences.getInt("isUser", -1);
+                int userId = sharedPreferences.getInt("id_user", -1);
                 if (userId != -1) {
                     displayData(loai.getSelectedItem().toString(), userId);
                 }
@@ -93,7 +93,7 @@ public class BuyFragment extends Fragment {
 
                     // Check if both dates are selected
                     if (startDate != null && endDate != null) {
-                        int userId = sharedPreferences.getInt("isUser", -1);
+                        int userId = sharedPreferences.getInt("id_user", -1);
                         displayData("Income", userId); // Update with the correct table name
                     }
                 },

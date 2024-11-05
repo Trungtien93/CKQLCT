@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/txtNameIncome"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
@@ -34,10 +34,11 @@
 
         <TextView
             android:id="@+id/txtTypeIncome"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
+            android:layout_marginLeft="30dp"
             android:layout_marginTop="20dp"
+            android:layout_weight="1"
             android:text=""
             android:textAlignment="textStart"
             android:textSize="20sp" />

@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ckqlct.R;
+import com.example.ckqlct.Transaction;
+import com.example.ckqlct.TransactionAdapter;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
@@ -71,11 +74,11 @@ public class HomeFragment extends Fragment {
         TextView chitieu = view.findViewById(R.id.txtchiTieu);
         TextView thang = view.findViewById(R.id.txtThang);
         lstHome = view.findViewById(R.id.lstHome);
+        TextView emptyDataText = view.findViewById(R.id.emptyDataText);
 
         // Lấy fullname từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String fullname = sharedPreferences.getString("fullname", "Guest"); // Mặc định là "Guest" nếu không tìm thấy fullname
-
         ten.setText(fullname);  // Hiển thị fullname
 
         // Set the greeting message based on the time of day
@@ -93,8 +96,8 @@ public class HomeFragment extends Fragment {
             greetingText.setText("Xin chào người dùng");
         }
         // Get user ID from SharedPreferences
-        int userId = sharedPreferences.getInt("isUser", -1); // Assuming 'isUser' stores the user ID
-
+        int userId = sharedPreferences.getInt("id_user", -1); // Assuming 'isUser' stores the user ID
+        Log.d("HomeFragment", "User ID: " + userId); // Debug log for user ID
         // Get the current month and year
         calendar = Calendar.getInstance();
         int currentMonth = calendar.get(Calendar.MONTH) + 1; // MONTH is 0-based in Calendar
@@ -135,140 +138,68 @@ public class HomeFragment extends Fragment {
             } else {
                 chitieu.setText("Database query failed");
             }
-        } else {
-            chitieu.setText("User not found");
-        }
+            // Check if userId is valid
+            if (userId != -1) {
+                // Fetch the latest transactions for the user
+                List<Transaction> transactions = getLatestTransactions(userId);
 
+                // Check if transactions list is empty
+                if (transactions.isEmpty()) {
+                    // Show a message that there is no data
+                    emptyDataText.setVisibility(View.VISIBLE);
+                    emptyDataText.setText("Không có dữ liệu."); // Display a message in Vietnamese
+                    lstHome.setVisibility(View.GONE); // Hide the ListView if no data
+                } else {
+                    // Update the ListView with the transactions
+                    TransactionAdapter adapter = new TransactionAdapter(getActivity(), transactions);
+                    lstHome.setAdapter(adapter);
+                    lstHome.setVisibility(View.VISIBLE); // Show the ListView
+                    emptyDataText.setVisibility(View.GONE); // Hide the no data message
+                }
+            } else {
+                // Handle case where user is not logged in or invalid userId
+                emptyDataText.setVisibility(View.VISIBLE);
+                emptyDataText.setText("Vui lòng đăng nhập."); // Prompt the user to log in
+                lstHome.setVisibility(View.GONE); // Hide the ListView
+            }
+        }
         return view;
     }
+    // Update this method to check if there are any transactions for the given user
+    private List<Transaction> getLatestTransactions(int userId) {
+        List<Transaction> transactions = new ArrayList<>();
 
-    public void displayHistoryTransaction(int userId) {
-        // Initialize the list to store data
-        ArrayList<HashMap<String, String>> transactionList = new ArrayList<>();
+        String query = "SELECT i.income_total, i.note, it.income_type, it.income_name, i.datetime " +
+                "FROM Income i " +
+                "JOIN Income_Type it ON i.incomeType_id = it.incomeType_id " +
+                "WHERE i.id_user = ? AND DATE(i.datetime) >= DATE('now', '-3 days') " +
+                "ORDER BY i.datetime DESC";
 
-        // Open the database for reading
-        db = getActivity().openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
-
-        // SQL query to retrieve data from HistoryTransaction for the specified user
-        String query = "SELECT transaction_type, transaction_name, transaction_total, transaction_note, datetime " +
-                "FROM HistoryTransaction WHERE id_user = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
-
-        // Check if cursor has data
         if (cursor.moveToFirst()) {
-            // Get the column indices (safe check for -1)
-            int transactionTypeIndex = cursor.getColumnIndex("transaction_type");
-            int transactionNameIndex = cursor.getColumnIndex("transaction_name");
-            int transactionTotalIndex = cursor.getColumnIndex("transaction_total");
-            int transactionNoteIndex = cursor.getColumnIndex("transaction_note");
-            int datetimeIndex = cursor.getColumnIndex("datetime");
-
-            // Loop through the cursor to populate the transactionList
             do {
-                HashMap<String, String> transaction = new HashMap<>();
+                String type = cursor.getString(cursor.getColumnIndexOrThrow("income_type"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("income_name"));
+                double total = cursor.getDouble(cursor.getColumnIndexOrThrow("income_total"));
+                String note = cursor.getString(cursor.getColumnIndexOrThrow("note"));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow("datetime"));
 
-                // Check each index before accessing the data to prevent errors
-                if (transactionTypeIndex != -1) {
-                    transaction.put("transaction_type", cursor.getString(transactionTypeIndex));
-                }
-                if (transactionNameIndex != -1) {
-                    transaction.put("transaction_name", cursor.getString(transactionNameIndex));
-                }
-                if (transactionTotalIndex != -1) {
-                    transaction.put("transaction_total", String.valueOf(cursor.getDouble(transactionTotalIndex)));
-                }
-                if (transactionNoteIndex != -1) {
-                    transaction.put("transaction_note", cursor.getString(transactionNoteIndex));
-                }
-                if (datetimeIndex != -1) {
-                    transaction.put("datetime", cursor.getString(datetimeIndex));
-                }
+                // Format currency and date here
+                String formattedTotal = formatCurrency(total);
+            //    String formattedDate = formatDate(date);
 
-                transactionList.add(transaction);
+                transactions.add(new Transaction(type, name, formattedTotal, note, date));
             } while (cursor.moveToNext());
         }
-
         cursor.close();
-        db.close();
-
-        // Adapter to bind data to lstHome
-        SimpleAdapter adapter = new SimpleAdapter(
-                getActivity(),
-                transactionList,
-                R.layout.list_item_transaction, // Custom layout for each row
-                new String[]{"transaction_type", "transaction_name", "transaction_total", "transaction_note", "datetime"},
-                new int[]{R.id.txtTransactionType, R.id.txtTransactionName, R.id.txtTransactionTotal, R.id.txtTransactionNote, R.id.txtTransactionDate}
-        );
-
-        lstHome.setAdapter(adapter);
+        return transactions;
     }
 
+    private String formatCurrency(double amount) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return currencyFormat.format(amount);
+    }
 
-
-
-//    private void displayRecentTransactions(int userId, ListView lstHome) {
-//        String transactionQuery = "SELECT transaction_name, datetime, transaction_total " +
-//                "FROM HistoryTransaction WHERE id_user = ? ORDER BY datetime DESC LIMIT 10";
-//
-//        Cursor transactionCursor = db.rawQuery(transactionQuery, new String[]{String.valueOf(userId)});
-//
-//        if (transactionCursor != null) {
-//            // Log the cursor columns for debugging
-//            StringBuilder sb = new StringBuilder();
-//            for (int i = 0; i < transactionCursor.getColumnCount(); i++) {
-//                sb.append(transactionCursor.getColumnName(i)).append("\n");
-//            }
-//            Log.d("Cursor Columns", sb.toString());
-//
-//            if (transactionCursor.moveToFirst()) {
-//                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-//                        getContext(),
-//                        R.layout.list_item_home,
-//                        transactionCursor,
-//                        new String[]{"transaction_name", "datetime", "transaction_total"},
-//                        new int[]{R.id.txtTransactionName, R.id.txtDate, R.id.txtTransactionTotal},
-//                        0
-//                ) {
-//                    @Override
-//                    public View getView(int position, View convertView, ViewGroup parent) {
-//                        View view = super.getView(position, convertView, parent);
-//
-//                        if (transactionCursor.moveToPosition(position)) {
-//                            // Set total formatted as currency (VND)
-//                            TextView txtTransactionTotal = view.findViewById(R.id.txtTransactionTotal);
-//                            int totalIndex = transactionCursor.getColumnIndex("transaction_total");
-//                            if (totalIndex != -1) {
-//                                double total = transactionCursor.getDouble(totalIndex);
-//                                NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-//                                String formattedTotal = numberFormat.format(total).replace("₫", "đ");
-//                                txtTransactionTotal.setText(formattedTotal);
-//                            } else {
-//                                Log.e("Column Error", "Column 'transaction_total' not found!");
-//                            }
-//
-//                            // Format the date
-//                            TextView txtDate = view.findViewById(R.id.txtDate);
-//                            int dateIndex = transactionCursor.getColumnIndex("datetime");
-//                            if (dateIndex != -1) {
-//                                String dateStr = transactionCursor.getString(dateIndex);
-//                                txtDate.setText(formatDate(dateStr)); // Pass the date string instead of index
-//                            } else {
-//                                Log.e("Column Error", "Column 'datetime' does not exist!");
-//                            }
-//                        }
-//
-//                        return view;
-//                    }
-//                };
-//
-//                lstHome.setAdapter(adapter);
-//            } else {
-//                Toast.makeText(getContext(), "No recent transactions found!", Toast.LENGTH_SHORT).show();
-//            }
-//        } else {
-//            Toast.makeText(getContext(), "Cursor is null!", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 //    private String formatDate(String dateStr) {
 //        String formattedDate = "";
 //        try {

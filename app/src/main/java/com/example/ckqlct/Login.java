@@ -83,7 +83,7 @@ public class Login extends Activity {
                 SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLoggedIn", true);
-                editor.putInt("id_user", userId);
+                editor.putInt("id_user", userId); // Store the user ID here
                 editor.putString("fullname", fullname); // Lưu fullname vào SharedPreferences
                 editor.apply();
 
@@ -97,7 +97,8 @@ public class Login extends Activity {
                 cursor.close();
             }
         }
-        return -1;
+        return -1; // Return -1 if login fails
     }
+
 
 }

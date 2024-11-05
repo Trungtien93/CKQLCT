@@ -129,7 +129,13 @@ public class ThemChiTieu extends Activity {
             @Override
             public void onClick(View v) {
                 SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                int userId = preferences.getInt("isUser", -1);
+                int userId = preferences.getInt("id_user", -1); // Ensure you are using the correct key to get user ID
+
+                // Check if userId is valid
+                if (userId == -1) {
+                    Toast.makeText(ThemChiTieu.this, "Bạn cần đăng nhập trước!", Toast.LENGTH_SHORT).show();
+                    return; // Exit the method if the user ID is invalid
+                }
 
                 // Lấy incomeName đã chọn từ Spinner
                 String selectedIncomeName = spntenChiTieu.getSelectedItem().toString();
@@ -149,7 +155,7 @@ public class ThemChiTieu extends Activity {
                 values.put("income_total", totalIncome);
                 values.put("incomeType_id", incomeTypeId);
                 values.put("note", note);
-                values.put("id_user", userId);
+                values.put("id_user", userId); // Use the retrieved user ID
                 values.put("datetime", date);
 
                 long result = db.insert("Income", null, values);

@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@drawable/header_gradient">
+    tools:context=".MainActivity">
 
     <!-- Phần Header -->
 
@@ -156,6 +155,11 @@
             android:layout_marginBottom="8dp" />
 
         <!-- Item giao dịch -->
+        <TextView
+            android:id="@+id/emptyDataText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <ListView
             android:id="@+id/lstHome"
             android:layout_width="match_parent"

@@ -22,7 +22,7 @@ public class ChiTieu extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_share); // Đảm bảo bạn đã đặt tên layout đúng
+        setContentView(R.layout.doanhmuc_income); // Đảm bảo bạn đã đặt tên layout đúng
 
         // Khởi tạo cơ sở dữ liệu
         dbHelper = new DatabaseHelper(this);

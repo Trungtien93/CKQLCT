@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="20dp"
-            app:srcCompat="@drawable/ic_buy" />
+            app:srcCompat="@drawable/ic_buy_blue" />
 
         <TextView
             android:id="@+id/txtNameIncome"

@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class TransactionAdapter extends BaseAdapter {
     private Context context;
@@ -38,7 +36,7 @@ public class TransactionAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.list_item_transaction, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.list_item_transaction_income, parent, false);
         }
 
       //  TextView txtTransactionType = convertView.findViewById(R.id.txtTransactionType);
@@ -55,7 +53,9 @@ public class TransactionAdapter extends BaseAdapter {
      //   txtTransactionNote.setText(transaction.getNote());
         txtTransactionDate.setText(transaction.getDate());
 
+
         return convertView;
     }
+
     
 }

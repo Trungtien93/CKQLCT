@@ -35,6 +35,14 @@
         <activity android:name=".Version"></activity>
         <activity android:name=".ChiTieu"></activity>
         <activity android:name=".ThemChiTieu"></activity>
+        <activity android:name=".Nav_fragment.ShareFragment"></activity>
+        <activity android:name=".Nav_fragment.SettingsFragment"></activity>
+        <activity android:name=".Nav_fragment.AboutFragment"></activity>
+        <activity android:name=".DoanhMuc_income"></activity>
+        <activity android:name=".DoanhMuc_Expense"></activity>
+        <activity android:name=".ThemThuNhap"></activity>
+        <activity android:name=".ThemThuChi"></activity>
+
 
 
     </application>

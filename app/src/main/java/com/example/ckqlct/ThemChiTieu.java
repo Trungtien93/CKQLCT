@@ -3,6 +3,7 @@ package com.example.ckqlct;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,9 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,23 +29,20 @@ import java.util.Map;
 public class ThemChiTieu extends Activity {
     private Spinner spnloaiChiTieu, spntenChiTieu;
     private EditText edttongTien, edtNgay, edtghiChu;
-    private Button btnThem, btnXoa, btnExit;
+    private Button btnThem, btnXoa, btnExit, btnAddlist;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
-    private HashMap<String, List<String>> incomeTypeToNamesMap; // Bản đồ loại thu nhập -> danh sách tên chi tiêu
+    private HashMap<String, List<String>> incomeTypeToNamesMap;
     private Map<String, Integer> incomeNameToIdMap = new HashMap<>();
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.themchitieu_layout);
 
-        // Khởi tạo cơ sở dữ liệu
         dbHelper = new DatabaseHelper(this);
         db = dbHelper.getWritableDatabase();
 
-        // Khởi tạo view
         spnloaiChiTieu = findViewById(R.id.spnLoaiChiTieu);
         spntenChiTieu = findViewById(R.id.spnTenChiTieu);
         edttongTien = findViewById(R.id.edtTongTien);
@@ -55,18 +51,22 @@ public class ThemChiTieu extends Activity {
         btnThem = findViewById(R.id.btnThem);
         btnXoa = findViewById(R.id.btnXoa);
         btnExit = findViewById(R.id.btnDong);
+        btnAddlist = findViewById(R.id.btnAddList);
 
-        // Khởi tạo bản đồ loại thu nhập -> tên chi tiêu từ cơ sở dữ liệu
         incomeTypeToNamesMap = new HashMap<>();
-
         loadIncomeTypeData();
 
-        // Thiết lập adapter cho Spinner loại chi tiêu
+        // Cài đặt Adapter cho Spinner loại chi tiêu
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<>(incomeTypeToNamesMap.keySet()));
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnloaiChiTieu.setAdapter(typeAdapter);
 
-        // Đăng ký lắng nghe sự kiện thay đổi cho Spinner loại chi tiêu
+        btnAddlist.setOnClickListener(v -> {
+            Toast.makeText(getApplicationContext(), "Thêm chi tiêu", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ThemChiTieu.this, DoanhMuc_income.class);
+            startActivity(intent);
+        });
+
         spnloaiChiTieu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -82,110 +82,95 @@ public class ThemChiTieu extends Activity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Không làm gì khi không có mục nào được chọn
             }
         });
 
-        // Set a click listener to open the DatePickerDialog
-        edtNgay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int month = calendar.get(Calendar.MONTH);
-                int year = calendar.get(Calendar.YEAR);
+        edtNgay.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        ThemChiTieu.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-                                // Format the date in YYYY-MM-DD format
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                String formattedDate = dateFormat.format(new Date(selectedYear - 1900, selectedMonth, selectedDay));
-
-                                edtNgay.setText(formattedDate); // Update the EditText with formatted date
-                            }
-                        },
-                        year, month, day);
-                datePickerDialog.show();
-            }
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    ThemChiTieu.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String formattedDate = dateFormat.format(new Date(selectedYear - 1900, selectedMonth, selectedDay));
+                        edtNgay.setText(formattedDate);
+                    },
+                    year, month, day);
+            datePickerDialog.show();
         });
-        btnXoa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearFields();
 
+        btnXoa.setOnClickListener(view -> clearFields());
+        btnExit.setOnClickListener(view -> finish());
+
+        btnThem.setOnClickListener(v -> {
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            int userId = preferences.getInt("id_user", -1);
+
+            if (userId == -1) {
+                Toast.makeText(ThemChiTieu.this, "Bạn cần đăng nhập trước!", Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
-        btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
+
+            if (spntenChiTieu.getSelectedItem() == null) {
+                Toast.makeText(ThemChiTieu.this, "Vui lòng chọn tên chi tiêu!", Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
-        // Xử lý sự kiện khi nhấn nút Thêm
-        btnThem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                int userId = preferences.getInt("id_user", -1); // Ensure you are using the correct key to get user ID
 
-                // Check if userId is valid
-                if (userId == -1) {
-                    Toast.makeText(ThemChiTieu.this, "Bạn cần đăng nhập trước!", Toast.LENGTH_SHORT).show();
-                    return; // Exit the method if the user ID is invalid
-                }
+            String selectedIncomeName = spntenChiTieu.getSelectedItem().toString();
+            int incomeTypeId = incomeNameToIdMap.getOrDefault(selectedIncomeName, -1);
 
-                // Lấy incomeName đã chọn từ Spinner
-                String selectedIncomeName = spntenChiTieu.getSelectedItem().toString();
+            String totalIncomeStr = edttongTien.getText().toString().trim();
+            String date = edtNgay.getText().toString().trim();
+            String note = edtghiChu.getText().toString().trim();
 
-                // Lấy incomeType_id tương ứng từ incomeNameToIdMap
-                int incomeTypeId = incomeNameToIdMap.get(selectedIncomeName);
+            double totalIncome;
+            try {
+                totalIncome = Double.parseDouble(totalIncomeStr);
+            } catch (NumberFormatException e) {
+                Toast.makeText(ThemChiTieu.this, "Vui lòng nhập số hợp lệ cho Tổng tiền!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                String totalIncomeStr = edttongTien.getText().toString().trim();
-                String date = edtNgay.getText().toString().trim();
-                String note = edtghiChu.getText().toString().trim();
+            ContentValues values = new ContentValues();
+            values.put("income_total", totalIncome);
+            values.put("incomeType_id", incomeTypeId);
+            values.put("note", note);
+            values.put("id_user", userId);
+            values.put("datetime", date);
 
-                // Kiểm tra và chuyển đổi totalIncomeStr thành số
-                double totalIncome = totalIncomeStr.isEmpty() ? 0 : Double.parseDouble(totalIncomeStr);
-
-                // Thực hiện lệnh INSERT vào bảng Income
-                ContentValues values = new ContentValues();
-                values.put("income_total", totalIncome);
-                values.put("incomeType_id", incomeTypeId);
-                values.put("note", note);
-                values.put("id_user", userId); // Use the retrieved user ID
-                values.put("datetime", date);
-
-                long result = db.insert("Income", null, values);
-                if (result == -1) {
-                    Toast.makeText(ThemChiTieu.this, "Thêm chi tiêu thất bại!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ThemChiTieu.this, "Thêm chi tiêu thành công!", Toast.LENGTH_SHORT).show();
-                }
+            long result = db.insert("Income", null, values);
+            if (result == -1) {
+                Toast.makeText(ThemChiTieu.this, "Thêm chi tiêu thất bại!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ThemChiTieu.this, "Thêm chi tiêu thành công!", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadIncomeTypeData();
+
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<>(incomeTypeToNamesMap.keySet()));
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnloaiChiTieu.setAdapter(typeAdapter);
+    }
+
     private void clearFields() {
         edttongTien.setText("");
         edtghiChu.setText("");
-        // Lấy ngày hiện tại
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0  
 
-        int year = calendar.get(Calendar.YEAR);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = dateFormat.format(new Date());
+        edtNgay.setText(currentDate);
 
-        // Định dạng ngày thành chuỗi
-        String dateString = day + "/" + month + "/" + year;
-
-        // Hiển thị ngày lên EditText
-        edtNgay.setText(dateString);
-        Toast.makeText(getApplicationContext(),"Đã xoá trắng các trường",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Đã xoá trắng các trường", Toast.LENGTH_LONG).show();
     }
 
-    // Phương thức để load dữ liệu từ bảng Income_Type vào incomeTypeToNamesMap
     private void loadIncomeTypeData() {
         Cursor cursor = db.rawQuery("SELECT incomeType_id, income_type, income_name FROM Income_Type", null);
 
@@ -198,21 +183,20 @@ public class ThemChiTieu extends Activity {
             return;
         }
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                int incomeTypeId = cursor.getInt(incomeTypeIdIndex);
-                String incomeType = cursor.getString(incomeTypeIndex);
-                String incomeName = cursor.getString(incomeNameIndex);
+        incomeTypeToNamesMap.clear();
+        incomeNameToIdMap.clear();
 
-                if (!incomeTypeToNamesMap.containsKey(incomeType)) {
-                    incomeTypeToNamesMap.put(incomeType, new ArrayList<>());
-                }
-                incomeTypeToNamesMap.get(incomeType).add(incomeName);
+        while (cursor.moveToNext()) {
+            int incomeTypeId = cursor.getInt(incomeTypeIdIndex);
+            String incomeType = cursor.getString(incomeTypeIndex);
+            String incomeName = cursor.getString(incomeNameIndex);
 
-                // Thêm vào map để dễ truy xuất ID từ tên chi tiêu
-                incomeNameToIdMap.put(incomeName, incomeTypeId);
+            if (!incomeTypeToNamesMap.containsKey(incomeType)) {
+                incomeTypeToNamesMap.put(incomeType, new ArrayList<>());
             }
-            cursor.close();
+            incomeTypeToNamesMap.get(incomeType).add(incomeName);
+            incomeNameToIdMap.put(incomeName, incomeTypeId);
         }
+        cursor.close();
     }
 }

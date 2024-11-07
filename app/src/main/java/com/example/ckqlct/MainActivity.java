@@ -17,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -35,6 +36,7 @@ import com.example.ckqlct.Nav_fragment.AboutFragment;
 import com.example.ckqlct.Nav_fragment.SettingsFragment;
 import com.example.ckqlct.Nav_fragment.ShareFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -134,107 +136,47 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerLoaiGD, spinnerTenGD;
     private EditText edtTongTien, edtNgay, edtGhichu;
     private Button btnThem, btnXoa, btnDong;
+
     private void showBottomDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.activity_transaction);
-        edtDay = dialog.findViewById(R.id.edtNgay);
-        // Khởi tạo view
-       // spinnerLoaiGD = dialog.findViewById(R.id.spinnerloaigd);
-      //  spinnerTenGD = dialog.findViewById(R.id.spinnerten);
-        edtTongTien = dialog.findViewById(R.id.edtTongTien);
-        edtGhichu = dialog.findViewById(R.id.edtGhichu);
-        btnThem = dialog.findViewById(R.id.btnThem);
-        btnXoa = dialog.findViewById(R.id.btnxoa);
-        btnDong = dialog.findViewById(R.id.btndong);
+        // Tạo BottomSheetDialog
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(R.layout.add_transaction);
 
-        // Khởi tạo Spinner bên trong Dialog
-        Spinner loai = dialog.findViewById(R.id.spinnerloaigd);
-        String loaict[] = {"Chi Tiêu", "Tiền Tiết Kiệm"};
+        // Khởi tạo các view từ layout
+        TextView textTitle = bottomSheetDialog.findViewById(R.id.textTitle);
+        Button btnAddIncome = bottomSheetDialog.findViewById(R.id.btnAddIncome);
+        Button btnAddExpense = bottomSheetDialog.findViewById(R.id.btnAddExpense);
 
-        Spinner spnTen = dialog.findViewById(R.id.spinnerten);
-        String ten[] = {"Ăn Uống", "Đi Lại", "Mua Sắm", "Chi tiêu Khác"};
-
-        // Tạo Adapter cho Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, loaict);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ten);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Gắn Adapter vào Spinner
-        loai.setAdapter(adapter);
-        spnTen.setAdapter(adapter1);
-
-        // Xử lý sự kiện chọn Spinner
-        loai.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Bạn đã chọn: " + loaict[position], Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Không làm gì nếu không có gì được chọn
-            }
-        });
-        // Set a click listener to open the DatePickerDialog
-        edtDay.setOnClickListener(new View.OnClickListener() {
+        
+        // Thiết lập sự kiện cho các nút
+        btnAddIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the current date as default
-                Calendar calendar = Calendar.getInstance();
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int month = calendar.get(Calendar.MONTH);
-                int year = calendar.get(Calendar.YEAR);
+                Toast.makeText(getApplicationContext(), "Thêm chi tiêu", Toast.LENGTH_SHORT).show();
 
-                // Create and show DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        MainActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-                                // Format and set the selected date in the EditText
-                                edtDay.setText(selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
-                            }
-                        },
-                        year, month, day);
-                datePickerDialog.show();
+                // Mở Activity mới
+                Intent intent = new Intent(MainActivity.this, ThemChiTieu.class);
+                startActivity(intent);
+                // Thực hiện thêm chi tiêu
+                bottomSheetDialog.dismiss();
             }
         });
-        // Xử lý sự kiện cho nút "Đóng"
-        btnDong.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {;
-                finish(); // Đóng activity
-            }
-        });
-        // Xử lý sự kiện cho nút "Xóa"
-        btnXoa.setOnClickListener(new View.OnClickListener() {
+
+        btnAddExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFields();
+                Toast.makeText(getApplicationContext(), "Thêm Thu Nhập", Toast.LENGTH_SHORT).show();
+                // Mở Activity mới
+                Intent intent = new Intent(MainActivity.this, ThemThuNhap.class);
+                startActivity(intent);
+                // Thực hiện xem thống kê
+                bottomSheetDialog.dismiss();
+
             }
         });
 
-        spnTen.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Bạn đã chọn: " + ten[position], Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Không làm gì nếu không có gì được chọn
-            }
-        });
-
-        // Hiển thị dialog
-        dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        // Hiển thị BottomSheetDialog
+        bottomSheetDialog.show();
     }
 
 
@@ -248,14 +190,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Phương thức để ẩn/hiện phần Tiền tiết kiệm
-    private void toggleSavingSections(LinearLayout section) {
-        if (section.getVisibility() == View.GONE) {
-            section.setVisibility(View.VISIBLE);
-        } else {
-            section.setVisibility(View.GONE);
-        }
-    }
+//    // Phương thức để ẩn/hiện phần Tiền tiết kiệm
+//    private void toggleSavingSections(LinearLayout section) {
+//        if (section.getVisibility() == View.GONE) {
+//            section.setVisibility(View.VISIBLE);
+//        } else {
+//            section.setVisibility(View.GONE);
+//        }
+//    }
     // Hàm thay thế Fragment
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

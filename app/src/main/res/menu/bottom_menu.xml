@@ -13,7 +13,7 @@
         android:title=""/>
     <item
         android:id="@+id/buy"
-        android:icon="@drawable/ic_buy"
+        android:icon="@drawable/ic_buy_blue"
         android:title="Purchase History" />
     <item
         android:id="@+id/statictical"

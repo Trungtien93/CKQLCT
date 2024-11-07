@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.List;
 
 public class TransactionAdapter extends BaseAdapter {
@@ -53,7 +55,12 @@ public class TransactionAdapter extends BaseAdapter {
      //   txtTransactionNote.setText(transaction.getNote());
         txtTransactionDate.setText(transaction.getDate());
 
-
+        // Apply different text colors for the total field based on the transaction type (income or expense)
+        if ("income".equalsIgnoreCase(transaction.getType())) {
+            txtTransactionTotal.setTextColor(ContextCompat.getColor(context, R.color.red));
+        } else if ("expense".equalsIgnoreCase(transaction.getType())) {
+            txtTransactionTotal.setTextColor(ContextCompat.getColor(context, R.color.green));
+        }
         return convertView;
     }
 

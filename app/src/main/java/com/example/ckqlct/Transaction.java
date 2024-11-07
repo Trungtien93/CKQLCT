@@ -1,4 +1,7 @@
 package com.example.ckqlct;
+
+import java.util.Locale;
+
 public class Transaction {
     private String type;
     private String name;
@@ -20,5 +23,7 @@ public class Transaction {
     public String getTotal() { return total; }
     public String getNote() { return note; }
     public String getDate() { return date; }
+    // New method to format total
 }
+
 

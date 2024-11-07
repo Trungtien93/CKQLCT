@@ -142,48 +142,49 @@ public class HomeFragment extends Fragment {
     private List<Transaction> getLatestTransactions(int userId) {
         List<Transaction> transactions = new ArrayList<>();
 
+        // Query for the 3 most recent income transactions
         String query = "SELECT i.income_total, i.note, it.income_type, it.income_name, i.datetime " +
                 "FROM Income i " +
                 "JOIN Income_Type it ON i.incomeType_id = it.incomeType_id " +
-                "WHERE i.id_user = ? AND DATE(i.datetime) >= DATE('now', '-3 days') " +
-                "ORDER BY i.datetime DESC";
+                "WHERE i.id_user = ? " +
+                "ORDER BY i.datetime DESC LIMIT 3";  // Limit to 3 most recent records
 
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                String type = cursor.getString(cursor.getColumnIndexOrThrow("income_type"));
+                String type = "Income";  // Set type as Income for the income query
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("income_name"));
                 double total = cursor.getDouble(cursor.getColumnIndexOrThrow("income_total"));
                 String note = cursor.getString(cursor.getColumnIndexOrThrow("note"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("datetime"));
-                String formattedTotal = formatCurrency(total);
+                String formattedTotal = "- " + formatCurrency(total);
 
                 transactions.add(new Transaction(type, name, formattedTotal, note, date));
             } while (cursor.moveToNext());
             cursor.close();
         }
 
-        String query1 = "SELECT i.expense_total, i.note, it.expense_type, it.expense_name, i.datetime " +
-                "FROM Expense i " +
-                "JOIN Expense_Type it ON i.expenseType_id = it.expenseType_id " +
-                "WHERE i.id_user = ? AND DATE(i.datetime) >= DATE('now', '-3 days') " +
-                "ORDER BY i.datetime DESC";
+        // Query for the 3 most recent expense transactions
+        String query1 = "SELECT e.expense_total, e.note, et.expense_type, et.expense_name, e.datetime " +
+                "FROM Expense e " +
+                "JOIN Expense_Type et ON e.expenseType_id = et.expenseType_id " +
+                "WHERE e.id_user = ? " +
+                "ORDER BY e.datetime DESC LIMIT 3";  // Limit to 3 most recent records
 
         Cursor cursor1 = db.rawQuery(query1, new String[]{String.valueOf(userId)});
         if (cursor1 != null && cursor1.moveToFirst()) {
             do {
-                String type = cursor1.getString(cursor1.getColumnIndexOrThrow("expense_type"));
+                String type = "Expense";  // Set type as Expense for the expense query
                 String name = cursor1.getString(cursor1.getColumnIndexOrThrow("expense_name"));
                 double total = cursor1.getDouble(cursor1.getColumnIndexOrThrow("expense_total"));
                 String note = cursor1.getString(cursor1.getColumnIndexOrThrow("note"));
                 String date = cursor1.getString(cursor1.getColumnIndexOrThrow("datetime"));
-                String formattedTotal = formatCurrency(total);
+                String formattedTotal = "+ " + formatCurrency(total);
 
                 transactions.add(new Transaction(type, name, formattedTotal, note, date));
-            } while (cursor.moveToNext());
-            cursor.close();
+            } while (cursor1.moveToNext());
+            cursor1.close();
         }
-
 
         return transactions;
     }

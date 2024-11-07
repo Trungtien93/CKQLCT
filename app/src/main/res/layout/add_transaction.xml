@@ -23,13 +23,19 @@
         android:id="@+id/btnAddIncome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/pink"
         android:text="Thêm Chi tiêu"
-        android:backgroundTint="@color/pink" />
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnAddExpense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/light_blue"
         android:text="Thêm Thu Nhập"
-        android:backgroundTint="@color/light_blue"/>
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 </LinearLayout>

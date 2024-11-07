@@ -121,7 +121,7 @@ public class BuyFragment extends Fragment {
         String query;
         Cursor cursor;
 
-        // Determine query based on the table name
+        // Determine query based on the table name (Income or Expense)
         if ("Income".equals(tableName)) {
             query = "SELECT i.rowid AS _id, i.datetime, i.note, it.income_name, i.income_total " +
                     "FROM Income i " +
@@ -129,15 +129,14 @@ public class BuyFragment extends Fragment {
                     "WHERE i.id_user = ? AND i.datetime BETWEEN ? AND ? " +
                     "ORDER BY i.datetime DESC";
             cursor = db.rawQuery(query, new String[]{String.valueOf(userId), startDate, endDate});
-        }else {
-            query = "SELECT e.id_expense AS _id, e.datetime, e.note, et.expense_name, e.expense_total " +
+        } else { // Expense
+            query = "SELECT e.rowid AS _id, e.datetime, e.note, et.expense_name, e.expense_total " +
                     "FROM Expense e " +
                     "JOIN Expense_Type et ON e.expenseType_id = et.expenseType_id " +
                     "WHERE e.id_user = ? AND e.datetime BETWEEN ? AND ? " +
                     "ORDER BY e.datetime DESC";
             cursor = db.rawQuery(query, new String[]{String.valueOf(userId), startDate, endDate});
         }
-
 
         // Check if there are no results
         if (cursor.getCount() == 0) {
@@ -147,41 +146,74 @@ public class BuyFragment extends Fragment {
         } else {
             emptyDataText.setVisibility(View.GONE);  // Hide empty message if data is present
 
-            // Set up adapter
-            SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                    getContext(),
-                    R.layout.list_item_income,
-                    cursor,
-                    new String[]{"datetime", "income_name", "note"}, // Update according to table structure
-                    new int[]{R.id.txtDate, R.id.txtIncomeName, R.id.txtNote},
-                    0
-            ) {
-                @Override
-                public void bindView(View view, Context context, Cursor cursor) {
-                    super.bindView(view, context, cursor);
+            // Set up adapters for Income or Expense
+            if ("Income".equals(tableName)) {
+                // Income adapter
+                SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                        getContext(),
+                        R.layout.list_item_income,
+                        cursor,
+                        new String[]{"datetime", "income_name", "note"},
+                        new int[]{R.id.txtDate, R.id.txtIncomeName, R.id.txtNote},
+                        0
+                ) {
+                    @Override
+                    public void bindView(View view, Context context, Cursor cursor) {
+                        super.bindView(view, context, cursor);
 
-                    TextView txtIncomeTotal = view.findViewById(R.id.txtIncomeTotal);
-                    int totalColumnIndex = cursor.getColumnIndex("income_total");
+                        TextView txtIncomeTotal = view.findViewById(R.id.txtIncomeTotal);
+                        int totalColumnIndex = cursor.getColumnIndex("income_total");
 
-                    // Check if the index is valid and get the total amount
-                    if (totalColumnIndex != -1) {
-                        String totalAmountStr = cursor.getString(totalColumnIndex);
-                        try {
-                            double totalAmount = Double.parseDouble(totalAmountStr);
-                            // Format the total amount as VNĐ
-                            NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                            txtIncomeTotal.setText("- " + numberFormat.format(totalAmount));
-                        } catch (NumberFormatException e) {
+                        if (totalColumnIndex != -1) {
+                            String totalAmountStr = cursor.getString(totalColumnIndex);
+                            try {
+                                double totalAmount = Double.parseDouble(totalAmountStr);
+                                NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                                txtIncomeTotal.setText("- " + numberFormat.format(totalAmount));
+                            } catch (NumberFormatException e) {
+                                txtIncomeTotal.setText("- 0");
+                                e.printStackTrace();
+                            }
+                        } else {
                             txtIncomeTotal.setText("- 0");
-                            e.printStackTrace();
                         }
-                    } else {
-                        // Handle the case where the column does not exist
-                        txtIncomeTotal.setText("- 0");
                     }
-                }
-            };
-            lstchiTieu.setAdapter(adapter);  // Set adapter if data is present
+                };
+                lstchiTieu.setAdapter(adapter);  // Set the income adapter
+            } else {
+                // Expense adapter
+                SimpleCursorAdapter adapter1 = new SimpleCursorAdapter(
+                        getContext(),
+                        R.layout.list_item_expense, // Layout for displaying expense item
+                        cursor,
+                        new String[]{"datetime", "expense_name", "note"},
+                        new int[]{R.id.txtDateExpense, R.id.txtExpenseName, R.id.txtNoteExpense},
+                        0
+                ) {
+                    @Override
+                    public void bindView(View view, Context context, Cursor cursor) {
+                        super.bindView(view, context, cursor);
+
+                        TextView txtExpenseTotal = view.findViewById(R.id.txtExpenseTotal);
+                        int totalColumnIndex1 = cursor.getColumnIndex("expense_total");
+
+                        if (totalColumnIndex1 != -1) {
+                            String totalAmountStr = cursor.getString(totalColumnIndex1);
+                            try {
+                                double totalAmount = Double.parseDouble(totalAmountStr);
+                                NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                                txtExpenseTotal.setText("+ " + numberFormat.format(totalAmount));
+                            } catch (NumberFormatException e) {
+                                txtExpenseTotal.setText("+ 0");
+                                e.printStackTrace();
+                            }
+                        } else {
+                            txtExpenseTotal.setText("+ 0");
+                        }
+                    }
+                };
+                lstchiTieu.setAdapter(adapter1);  // Set the expense adapter
+            }
         }
     }
 }

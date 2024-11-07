@@ -20,5 +20,7 @@
     <color name="deep_purple">#FF673AB7</color>"
     <color name="light_blue">#FF03A9F4</color>"
     <color name="deep_orange">#FFFF5722</color>"
+    <color name="incomeColor">#E0F7FA</color>  <!-- Light cyan for income -->
+    <color name="expenseColor">#FFEBEE</color> <!-- Light red for expense -->
 
 </resources>

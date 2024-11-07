@@ -117,7 +117,8 @@ public class ManagerFragment extends Fragment {
         });
 //        lnchiTieu.setOnClickListener(v -> {
 //            if (userId != -1) {
-//                showIncomePieChart(userId);
+//                Map<String, Float> incomeData = getIncomeDataForPieChart(userId);
+//                displayPieChart(incomeData);
 //            } else {
 //                Toast.makeText(getContext(), "User ID is not available", Toast.LENGTH_SHORT).show();
 //            }

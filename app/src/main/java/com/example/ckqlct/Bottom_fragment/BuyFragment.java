@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +20,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
 
 import androidx.fragment.app.Fragment;
 
 import com.example.ckqlct.R;
+import com.example.ckqlct.Transaction;
+import com.example.ckqlct.TransactionAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,6 +41,7 @@ public class BuyFragment extends Fragment {
     private SQLiteDatabase db;
     private SharedPreferences sharedPreferences;
     private String startDate, endDate;
+    TextView emptyDataText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +56,7 @@ public class BuyFragment extends Fragment {
         edtNgayTu = view.findViewById(R.id.edtNgayTu);
         edtNgayDen = view.findViewById(R.id.edtNgayDen);
         lstchiTieu = view.findViewById(R.id.lstchiTieu);
+        emptyDataText = view.findViewById(R.id.emptyDataText1);
 
         Spinner loai = view.findViewById(R.id.spnloai);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new String[]{"Income", "Expense"});
@@ -60,11 +66,12 @@ public class BuyFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int userId = sharedPreferences.getInt("id_user", -1);
+
                 if (userId != -1) {
                     displayData(loai.getSelectedItem().toString(), userId);
+
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) { }
         });
@@ -94,15 +101,18 @@ public class BuyFragment extends Fragment {
                     // Check if both dates are selected
                     if (startDate != null && endDate != null) {
                         int userId = sharedPreferences.getInt("id_user", -1);
-                        displayData("Income", userId); // Update with the correct table name
+                        String tableName = ((Spinner) getView().findViewById(R.id.spnloai)).getSelectedItem().toString();
+                        displayData(tableName, userId); // Use spinner value to determine table name
                     }
                 },
                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
+
     private void displayData(String tableName, int userId) {
         // Check if startDate or endDate is null
+        emptyDataText.setText("Danh sách trống!");
         if (startDate == null || endDate == null) {
             Toast.makeText(getContext(), "Please select both start and end dates.", Toast.LENGTH_SHORT).show();
             return; // Skip the query if dates are not set
@@ -111,6 +121,7 @@ public class BuyFragment extends Fragment {
         String query;
         Cursor cursor;
 
+        // Determine query based on the table name
         if ("Income".equals(tableName)) {
             query = "SELECT i.rowid AS _id, i.datetime, i.note, it.income_name, i.income_total " +
                     "FROM Income i " +
@@ -118,23 +129,30 @@ public class BuyFragment extends Fragment {
                     "WHERE i.id_user = ? AND i.datetime BETWEEN ? AND ? " +
                     "ORDER BY i.datetime DESC";
             cursor = db.rawQuery(query, new String[]{String.valueOf(userId), startDate, endDate});
-        } else {
-            query = "SELECT rowid AS _id, datetime, note, expense_name, expense_total " +
-                    "FROM Expense " +
-                    "WHERE id_user = ? AND datetime BETWEEN ? AND ? " +
-                    "ORDER BY datetime DESC";
+        }else {
+            query = "SELECT e.id_expense AS _id, e.datetime, e.note, et.expense_name, e.expense_total " +
+                    "FROM Expense e " +
+                    "JOIN Expense_Type et ON e.expenseType_id = et.expenseType_id " +
+                    "WHERE e.id_user = ? AND e.datetime BETWEEN ? AND ? " +
+                    "ORDER BY e.datetime DESC";
             cursor = db.rawQuery(query, new String[]{String.valueOf(userId), startDate, endDate});
         }
 
+
+        // Check if there are no results
         if (cursor.getCount() == 0) {
-            Toast.makeText(getContext(), "Danh sách trống!", Toast.LENGTH_SHORT).show();
-            lstchiTieu.setAdapter(null);
+            emptyDataText.setVisibility(View.VISIBLE);  // Show empty message
+            emptyDataText.setText("Danh sách trống!");
+            lstchiTieu.setAdapter(null);  // Clear ListView content
         } else {
+            emptyDataText.setVisibility(View.GONE);  // Hide empty message if data is present
+
+            // Set up adapter
             SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                     getContext(),
                     R.layout.list_item_income,
                     cursor,
-                    new String[]{"datetime", "income_name", "note"}, // Exclude income_total here
+                    new String[]{"datetime", "income_name", "note"}, // Update according to table structure
                     new int[]{R.id.txtDate, R.id.txtIncomeName, R.id.txtNote},
                     0
             ) {
@@ -148,7 +166,6 @@ public class BuyFragment extends Fragment {
                     // Check if the index is valid and get the total amount
                     if (totalColumnIndex != -1) {
                         String totalAmountStr = cursor.getString(totalColumnIndex);
-                        // Convert the total amount string to a number
                         try {
                             double totalAmount = Double.parseDouble(totalAmountStr);
                             // Format the total amount as VNĐ
@@ -164,7 +181,7 @@ public class BuyFragment extends Fragment {
                     }
                 }
             };
-            lstchiTieu.setAdapter(adapter);
+            lstchiTieu.setAdapter(adapter);  // Set adapter if data is present
         }
     }
 }

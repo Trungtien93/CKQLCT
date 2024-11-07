@@ -40,21 +40,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(id_user) REFERENCES User(id_user)" +
             ");";
 
-    // Bảng loại thu nhập
+    // Bảng loại chi tiêu
     private static final String CREATE_TABLE_INCOME_TYPE = "CREATE TABLE Income_Type (" +
             "incomeType_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "income_type NVARCHAR(50) NOT NULL, " +
             "income_name NVARCHAR(100) NOT NULL" +
             ");";
 
-    // Bảng loại chi tiêu
+    // Bảng loại  thu nhập
     private static final String CREATE_TABLE_EXPENSE_TYPE = "CREATE TABLE Expense_Type (" +
             "expenseType_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "expense_type NVARCHAR(50) NOT NULL, " +
             "expense_name NVARCHAR(100) NOT NULL" +
             ");";
 
-    // Bảng thu nhập
+    // Bảng chi tiêu
     private static final String CREATE_TABLE_INCOME = "CREATE TABLE Income (" +
             "id_income INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "id_user INTEGER, " +
@@ -66,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(incomeType_id) REFERENCES Income_Type(incomeType_id)" +
             ");";
 
-    // Bảng chi tiêu
+    // Bảng thu nhập
     private static final String CREATE_TABLE_EXPENSE = "CREATE TABLE Expense (" +
             "id_expense INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "id_user INTEGER, " +

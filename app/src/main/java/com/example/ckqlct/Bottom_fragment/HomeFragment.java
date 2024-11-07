@@ -72,6 +72,7 @@ public class HomeFragment extends Fragment {
         TextView ten = view.findViewById(R.id.userName);
         greetingText = view.findViewById(R.id.greetingText);
         TextView chitieu = view.findViewById(R.id.txtchiTieu);
+        TextView thuNhap = view.findViewById(R.id.txtthuNhap);
         TextView thang = view.findViewById(R.id.txtThang);
         lstHome = view.findViewById(R.id.lstHome);
         TextView emptyDataText = view.findViewById(R.id.emptyDataText);
@@ -104,7 +105,7 @@ public class HomeFragment extends Fragment {
         int currentYear = calendar.get(Calendar.YEAR);
 
         // Format current month to Vietnamese format
-        String monthName = currentMonth + " / " + currentYear; // Example: "11 / 2024"
+        String monthName = "Tháng " + currentMonth + " / " + currentYear; // Example: "11 / 2024"
         thang.setText(monthName); // Display the current month
 
         // Check if userId is valid
@@ -138,6 +139,7 @@ public class HomeFragment extends Fragment {
             } else {
                 chitieu.setText("Database query failed");
             }
+
             // Check if userId is valid
             if (userId != -1) {
                 // Fetch the latest transactions for the user
@@ -161,6 +163,37 @@ public class HomeFragment extends Fragment {
                 emptyDataText.setVisibility(View.VISIBLE);
                 emptyDataText.setText("Vui lòng đăng nhập."); // Prompt the user to log in
                 lstHome.setVisibility(View.GONE); // Hide the ListView
+            }
+        }
+        if (userId != -1) {
+            // Initialize database
+            db = getActivity().openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
+
+            // Query to get total income for the current month and user
+            String query = "SELECT SUM(expense_total) AS total_expense FROM Expense WHERE id_user = ? " +
+                    "AND strftime('%m', datetime) = ? AND strftime('%Y', datetime) = ?";
+            Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(currentMonth), String.valueOf(currentYear)});
+
+            if (cursor != null) {
+                // Move to the first row
+                if (cursor.moveToFirst()) {
+                    // Safely get the index of total_income
+                    int totalExpenseIndex = cursor.getColumnIndex("total_expense");
+                    if (totalExpenseIndex != -1) {
+                        // Get the total income value
+                        double totalExpense = cursor.getDouble(totalExpenseIndex);
+                        // Format as currency
+                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                        thuNhap.setText(numberFormat.format(totalExpense ));
+                    } else {
+                        thuNhap.setText("0 VNĐ"); // Default if no income found
+                    }
+                } else {
+                    thuNhap.setText("0 VNĐ"); // Default if no income found
+                }
+                cursor.close(); // Don't forget to close the cursor
+            } else {
+                thuNhap.setText("Database query failed");
             }
         }
         return view;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -17,6 +18,16 @@ import android.widget.TextView;
 import com.example.ckqlct.R;
 import com.example.ckqlct.Transaction;
 import com.example.ckqlct.TransactionAdapter;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -26,6 +37,7 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     private TextView greetingText, ten, chitieu, thuNhap, thang, emptyDataText;
+    private PieChart pieChart;
     private ListView lstHome;
     private SQLiteDatabase db;
     private static final String DATABASE_NAME = "QLCTCK.db";
@@ -62,6 +74,8 @@ public class HomeFragment extends Fragment {
         thang = view.findViewById(R.id.txtThang);
         lstHome = view.findViewById(R.id.lstHome);
         emptyDataText = view.findViewById(R.id.emptyDataText);
+        // Initialize LineChart
+        pieChart = view.findViewById(R.id.pieChart);
 
         // Set greeting message based on the time of day
         setGreetingMessage();
@@ -69,6 +83,7 @@ public class HomeFragment extends Fragment {
         // Display user information from SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String fullname = sharedPreferences.getString("fullname", "Guest");
+        int userId = sharedPreferences.getInt("id_user", -1);
         ten.setText(fullname);
 
         // Show current month and year
@@ -80,7 +95,7 @@ public class HomeFragment extends Fragment {
 
         // Open the database
         db = getActivity().openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
-
+        updateTotalIncomeAndExpense(userId);
         return view;
     }
 
@@ -118,12 +133,15 @@ public class HomeFragment extends Fragment {
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentYear = calendar.get(Calendar.YEAR);
 
+        double totalIncome = 0;
+        double totalExpense = 0;
+
         // Query for total income
         String incomeQuery = "SELECT SUM(income_total) AS total_income FROM Income WHERE id_user = ? " +
                 "AND strftime('%m', datetime) = ? AND strftime('%Y', datetime) = ?";
         Cursor incomeCursor = db.rawQuery(incomeQuery, new String[]{String.valueOf(userId), String.valueOf(currentMonth), String.valueOf(currentYear)});
         if (incomeCursor != null && incomeCursor.moveToFirst()) {
-            double totalIncome = incomeCursor.getDouble(incomeCursor.getColumnIndexOrThrow("total_income"));
+            totalIncome = incomeCursor.getDouble(incomeCursor.getColumnIndexOrThrow("total_income"));
             chitieu.setText(formatCurrency(totalIncome));
             incomeCursor.close();
         }
@@ -133,9 +151,68 @@ public class HomeFragment extends Fragment {
                 "AND strftime('%m', datetime) = ? AND strftime('%Y', datetime) = ?";
         Cursor expenseCursor = db.rawQuery(expenseQuery, new String[]{String.valueOf(userId), String.valueOf(currentMonth), String.valueOf(currentYear)});
         if (expenseCursor != null && expenseCursor.moveToFirst()) {
-            double totalExpense = expenseCursor.getDouble(expenseCursor.getColumnIndexOrThrow("total_expense"));
+            totalExpense = expenseCursor.getDouble(expenseCursor.getColumnIndexOrThrow("total_expense"));
             thuNhap.setText(formatCurrency(totalExpense));
             expenseCursor.close();
+        }
+
+        // Update the PieChart with income and expense percentages
+        updatePieChart(totalIncome, totalExpense);
+    }
+
+    private void updatePieChart(double totalIncome, double totalExpense) {
+        double total = totalIncome + totalExpense;
+        if (total > 0) {
+            float incomePercentage = (float) ((totalIncome / total) * 100);
+            float expensePercentage = (float) ((totalExpense / total) * 100);
+
+            List<PieEntry> entries = new ArrayList<>();
+            entries.add(new PieEntry(incomePercentage, "Income"));
+            entries.add(new PieEntry(expensePercentage, "Expense"));
+
+            PieDataSet dataSet = new PieDataSet(entries, "");
+
+// Define custom colors for the slices
+            List<Integer> colors = new ArrayList<>();
+            colors.add(Color.parseColor("#FF5252")); // Red color for Income
+            colors.add(Color.parseColor("#76FF03")); // Green color for Expense
+            dataSet.setColors(colors);  // Set the custom colors
+
+// Create PieData and set it to the pie chart
+            PieData pieData = new PieData(dataSet);
+            pieChart.setData(pieData);
+
+// Disable percentage text inside the chart
+            pieChart.setUsePercentValues(false);
+
+// Set properties for displaying the legend outside
+            pieChart.setDrawEntryLabels(false);  // Disable the default entry labels (percentages inside the slices)
+            pieChart.setDrawSlicesUnderHole(false);  // Ensures there is no overlap of text on slices
+
+// Enable the legend and position it outside
+            Legend legend = pieChart.getLegend();
+            legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+            legend.setDrawInside(false);
+            legend.setXEntrySpace(10f);  // Space between entries
+            legend.setYEntrySpace(10f);  // Space between entries
+
+// Customize the legend labels with percentage values
+            String incomeLabel = "Income " + String.format(Locale.US, "(%.1f%%)", incomePercentage);
+            String expenseLabel = "Expense " + String.format(Locale.US, "(%.1f%%)", expensePercentage);
+
+            entries.get(0).setLabel(incomeLabel);  // Set label for income with percentage
+            entries.get(1).setLabel(expenseLabel); // Set label for expense with percentage
+
+// Change the text color of the legend to white (for both Income and Expense)
+            legend.setTextColor(Color.WHITE);
+            legend.setTextSize(10);
+
+// Refresh the chart with updated data
+            pieChart.invalidate();
+
+
         }
     }
 
@@ -207,4 +284,5 @@ public class HomeFragment extends Fragment {
             greetingText.setText("Chúc bạn ngủ ngon!");
         }
     }
+
 }

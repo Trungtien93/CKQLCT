@@ -34,7 +34,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="Từ ngày"
-                        android:textColor="@color/black"
+                        android:textColor="#76FF03"
                         android:textSize="20sp" />
 
                     <EditText

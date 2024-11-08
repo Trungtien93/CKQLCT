@@ -1,10 +1,12 @@
 package com.example.ckqlct;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -47,6 +49,7 @@ public class TransactionAdapter extends BaseAdapter {
    //     TextView txtTransactionNote = convertView.findViewById(R.id.txtTransactionNote);
         TextView txtTransactionDate = convertView.findViewById(R.id.txtTransactionDate);
 
+        ImageView imghome = convertView.findViewById(R.id.imgHome);
         Transaction transaction = transactions.get(position);
 
       //  txtTransactionType.setText(transaction.getType());
@@ -58,8 +61,10 @@ public class TransactionAdapter extends BaseAdapter {
         // Apply different text colors for the total field based on the transaction type (income or expense)
         if ("income".equalsIgnoreCase(transaction.getType())) {
             txtTransactionTotal.setTextColor(ContextCompat.getColor(context, R.color.red));
+            imghome.setBackground(ContextCompat.getDrawable(context,R.drawable.ic_buy_blue));
         } else if ("expense".equalsIgnoreCase(transaction.getType())) {
             txtTransactionTotal.setTextColor(ContextCompat.getColor(context, R.color.green));
+            imghome.setBackground(ContextCompat.getDrawable(context,R.drawable.ic_statictical));
         }
         return convertView;
     }

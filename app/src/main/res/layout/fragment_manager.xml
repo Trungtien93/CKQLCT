@@ -73,7 +73,9 @@
                 android:id="@+id/txtIncome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="" />
+                android:text=""
+                android:textColor="#D50000"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -108,7 +110,9 @@
                 android:id="@+id/txtExpense"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="" />
+                android:text=""
+                android:textColor="#64DD17"
+                android:textStyle="bold" />
 
 
         </LinearLayout>

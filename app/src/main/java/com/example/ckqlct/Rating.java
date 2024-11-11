@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,7 +20,7 @@ public class Rating extends AppCompatActivity {
 
     private EditText edtGhichu;
     private Button btnThem, btnClear;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     ListView lstRating;
     private SQLiteDatabase db; // Để truy cập cơ sở dữ liệu
 
@@ -31,7 +30,7 @@ public class Rating extends AppCompatActivity {
         setContentView(R.layout.activity_rating); // Đảm bảo bạn đã đặt tên layout đúng
 
         // Khởi tạo cơ sở dữ liệu
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase(); // Khởi tạo db ở đây
 
         // Khởi tạo view

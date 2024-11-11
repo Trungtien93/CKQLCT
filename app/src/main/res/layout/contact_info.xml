@@ -1,0 +1,52 @@
+<!-- res/layout/contact_info.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Tiêu đề cho phần liên hệ -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thông tin liên hệ"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Thông tin Facebook -->
+    <TextView
+        android:layout_width="204dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:drawableLeft="@drawable/ic_facebook"
+        android:drawablePadding="8dp"
+        android:text="FB: Trung Tiến"
+        android:textSize="16sp"
+        android:gravity="center"/>
+
+    <!-- Thông tin Zalo -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zalo: +84 356 736 812"
+        android:textSize="16sp"
+        android:drawableLeft="@drawable/ic_zalo"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"/>
+
+    <!-- Thông tin Email -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email: ntngroup@gmail.com"
+        android:textSize="16sp"
+        android:drawableLeft="@drawable/ic_gmail"
+        android:drawablePadding="8dp"
+        android:gravity="center"/>
+
+</LinearLayout>

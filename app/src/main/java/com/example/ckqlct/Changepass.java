@@ -9,10 +9,6 @@ import android.widget.ImageView;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,7 +19,7 @@ public class Changepass extends AppCompatActivity {
     private boolean isPasswordVisible = false; // Biến theo dõi trạng thái hiển thị mật khẩu
     private Button btnUpdatePassword;
     private SQLiteDatabase db;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +33,7 @@ public class Changepass extends AppCompatActivity {
         btnUpdatePassword = findViewById(R.id.btnUpdatePassword);
 
         // Khởi tạo DatabaseHelper và cơ sở dữ liệu
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase();
 
         // Xử lý sự kiện cập nhật mật khẩu

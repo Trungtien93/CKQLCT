@@ -42,6 +42,7 @@
         <activity android:name=".DoanhMuc_Expense"></activity>
         <activity android:name=".ThemThuNhap"></activity>
         <activity android:name=".ThemThuChi"></activity>
+        <activity android:name=".AboutUs"></activity>
 
 
 

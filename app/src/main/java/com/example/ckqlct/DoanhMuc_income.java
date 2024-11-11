@@ -22,7 +22,7 @@ public class DoanhMuc_income extends AppCompatActivity {
 
     private EditText edtType, edtName;
     private Button btnThem, btnClear;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     private ListView lstChiTieu;
     private SQLiteDatabase db;
     private ArrayAdapter<String> adapter;
@@ -34,7 +34,7 @@ public class DoanhMuc_income extends AppCompatActivity {
         setContentView(R.layout.doanhmuc_income); // Đổi layout XML cho Activity
 
         // Khởi tạo cơ sở dữ liệu
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase();
 
         // Khởi tạo view

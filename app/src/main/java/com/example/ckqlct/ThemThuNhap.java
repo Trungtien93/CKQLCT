@@ -30,7 +30,7 @@ public class ThemThuNhap extends Activity {
     private Spinner spnLoaiThuNhap, spnTenThuNhap;
     private EditText edtTongTien, edtNgay, edtGhiChu;
     private Button btnThem, btnXoa, btnExit, btnAddList;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     private SQLiteDatabase db;
     private HashMap<String, List<String>> expenseTypeToNamesMap;
     private Map<String, Integer> expenseNameToIdMap = new HashMap<>();
@@ -40,7 +40,7 @@ public class ThemThuNhap extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.themthunhap_layout);
 
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase();
 
         spnLoaiThuNhap = findViewById(R.id.spnLoaiThuNhap);

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DataQLCT extends SQLiteOpenHelper {
 
     // Tên cơ sở dữ liệu và phiên bản
     private static final String DATABASE_NAME = "QLCTCK.db";
@@ -105,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "version_old NVARCHAR(50)" +
             ");";
 
-    public DatabaseHelper(Context context) {
+    public DataQLCT(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

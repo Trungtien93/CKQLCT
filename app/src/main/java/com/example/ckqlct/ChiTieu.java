@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ChiTieu extends AppCompatActivity {
     private EditText edtType, edtName;
     private Button btnThem, btnClear;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     ListView lstChiTieu;
     private SQLiteDatabase db; //
 
@@ -25,7 +25,7 @@ public class ChiTieu extends AppCompatActivity {
         setContentView(R.layout.doanhmuc_income); // Đảm bảo bạn đã đặt tên layout đúng
 
         // Khởi tạo cơ sở dữ liệu
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase(); // Khởi tạo db ở đây
 
         // Khởi tạo view

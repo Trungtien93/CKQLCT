@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class RegisterActivity extends Activity {
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     EditText eusername, eemail, epassword;
     Button register;
 
@@ -23,7 +23,7 @@ public class RegisterActivity extends Activity {
         setContentView(R.layout.activity_register_layout2);
 
         // Khởi tạo DatabaseHelper
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
 
         // Ánh xạ các thành phần giao diện
         eusername = findViewById(R.id.username);

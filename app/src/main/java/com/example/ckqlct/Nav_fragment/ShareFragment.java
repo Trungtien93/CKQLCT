@@ -19,10 +19,8 @@ import android.widget.Toast;
 
 import com.example.ckqlct.ChiTieuAdapter;
 import com.example.ckqlct.ChiTieuItem;
-import com.example.ckqlct.DatabaseHelper;
+import com.example.ckqlct.DataQLCT;
 import com.example.ckqlct.R;
-import com.example.ckqlct.RatingAdapter;
-import com.example.ckqlct.RatingItem;
 
 import java.util.ArrayList;
 
@@ -30,7 +28,7 @@ public class ShareFragment extends Fragment {
 
     private EditText edtType, edtName;
     private Button btnThem, btnClear;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     private ListView lstChiTieu;
     private SQLiteDatabase db;
     private ArrayAdapter<String> adapter;
@@ -43,7 +41,7 @@ public class ShareFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_share, container, false);
 
         // Khởi tạo cơ sở dữ liệu
-        dbHelper = new DatabaseHelper(getActivity());
+        dbHelper = new DataQLCT (getActivity());
         db = dbHelper.getWritableDatabase();
 
         // Khởi tạo view

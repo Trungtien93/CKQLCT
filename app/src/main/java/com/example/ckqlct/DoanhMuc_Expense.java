@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +21,7 @@ public class DoanhMuc_Expense extends AppCompatActivity {
 
     private EditText edtType, edtName;
     private Button btnAdd, btnExit;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     private SQLiteDatabase db;
     private ListView lstExpense;
     private ArrayList<String> expenseTypeList;
@@ -35,7 +34,7 @@ public class DoanhMuc_Expense extends AppCompatActivity {
         setContentView(R.layout.doanhmuc_expense); // Ensure doanhmuc_expense.xml exists and has the correct IDs
 
         // Initialize the database
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase();
 
         // Initialize views

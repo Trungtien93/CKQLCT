@@ -30,7 +30,7 @@ public class ThemChiTieu extends Activity {
     private Spinner spnloaiChiTieu, spntenChiTieu;
     private EditText edttongTien, edtNgay, edtghiChu;
     private Button btnThem, btnXoa, btnExit, btnAddlist;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     private SQLiteDatabase db;
     private HashMap<String, List<String>> incomeTypeToNamesMap;
     private Map<String, Integer> incomeNameToIdMap = new HashMap<>();
@@ -40,7 +40,7 @@ public class ThemChiTieu extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.themchitieu_layout);
 
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase();
 
         spnloaiChiTieu = findViewById(R.id.spnLoaiChiTieu);

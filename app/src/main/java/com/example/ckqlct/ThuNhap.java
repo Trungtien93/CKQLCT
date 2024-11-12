@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ThuNhap extends AppCompatActivity {
     private EditText edtExpenseType, edtExpenseName;
     private Button btnAddExpense, btnExit;
-    private DatabaseHelper dbHelper;
+    private DataQLCT dbHelper;
     private SQLiteDatabase db;
     private ListView lstExpense;
 
@@ -25,7 +24,7 @@ public class ThuNhap extends AppCompatActivity {
         setContentView(R.layout.doanhmuc_expense); // Ensure this layout exists and has correct IDs
 
         // Initialize database
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DataQLCT (this);
         db = dbHelper.getWritableDatabase();
 
         // Initialize views

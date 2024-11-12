@@ -9,32 +9,31 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.ckqlct.AboutUs;
 import com.example.ckqlct.Changepass;
+import com.example.ckqlct.Nav_fragment.AccountFragment;
 import com.example.ckqlct.Nav_fragment.SettingsFragment;
 import com.example.ckqlct.R;
 import com.example.ckqlct.Rating;
 import com.example.ckqlct.ThemChiTieu;
 
-public class StaticticalFragment extends Fragment {
+public class SettingFragment extends Fragment {
 
     private TextView ten, txtChangeArea, txtRateApp;
     private SQLiteDatabase db;
     private SharedPreferences sharedPreferences;
 
-    public StaticticalFragment() {
+    public SettingFragment() {
         // Required empty public constructor
     }
 
-    public static StaticticalFragment newInstance(String param1, String param2) {
-        StaticticalFragment fragment = new StaticticalFragment();
+    public static SettingFragment newInstance(String param1, String param2) {
+        SettingFragment fragment = new SettingFragment ();
         Bundle args = new Bundle();
         args.putString("param1", param1);
         args.putString("param2", param2);
@@ -61,6 +60,7 @@ public class StaticticalFragment extends Fragment {
         txtRateApp = view.findViewById(R.id.txtRateApp);
         TextView thongtin = view.findViewById(R.id.txtPersonalInfo);
         TextView Caidat = view.findViewById(R.id.txtSettings);
+        TextView thongTin = view.findViewById(R.id.txtCompanyInfo);
 
         // Initialize SharedPreferences and database
         sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -91,9 +91,9 @@ public class StaticticalFragment extends Fragment {
         thongtin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SettingsFragment settingsFragment = new SettingsFragment();
+                AccountFragment accountFragment = new AccountFragment ();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.frament_layout, settingsFragment);
+                transaction.replace(R.id.frament_layout, accountFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -109,8 +109,18 @@ public class StaticticalFragment extends Fragment {
             Intent intent = new Intent(getActivity(), Rating.class);
             startActivity(intent);
         });
-        Caidat.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ThemChiTieu.class);
+        Caidat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingsFragment settingFragment = new SettingsFragment ();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.frament_layout, settingFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+        thongTin.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AboutUs.class);
             startActivity(intent);
         });
 

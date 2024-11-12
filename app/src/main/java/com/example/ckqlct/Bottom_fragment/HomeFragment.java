@@ -199,8 +199,8 @@ public class HomeFragment extends Fragment {
             legend.setYEntrySpace(10f);  // Space between entries
 
 // Customize the legend labels with percentage values
-            String incomeLabel = "Income " + String.format(Locale.US, "(%.1f%%)", incomePercentage);
-            String expenseLabel = "Expense " + String.format(Locale.US, "(%.1f%%)", expensePercentage);
+            String incomeLabel = "Chi Tiêu " + String.format(Locale.US, "(%.1f%%)", incomePercentage);
+            String expenseLabel = "Thu Nhập " + String.format(Locale.US, "(%.1f%%)", expensePercentage);
 
             entries.get(0).setLabel(incomeLabel);  // Set label for income with percentage
             entries.get(1).setLabel(expenseLabel); // Set label for expense with percentage

@@ -84,6 +84,7 @@ public class StaticticalFragment extends Fragment {
         }
 
         // Display fullname in the TextView
+        //22222
         ten.setText(fullname != null ? fullname : "Guest");
 
         // Navigate to SettingsFragment when "Personal Info" is clicked

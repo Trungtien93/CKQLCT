@@ -123,6 +123,13 @@
                 android:paddingLeft="16dp"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical" />
+
+            <Switch
+                android:id="@+id/swThongBao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="" />
         </LinearLayout>
 
         <!-- Chính sách và điều khoản -->
@@ -149,6 +156,7 @@
                 android:src="@drawable/ic_info" />
 
             <TextView
+                android:id="@+id/txtchinhSach"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chính sách quyền riêng tư"

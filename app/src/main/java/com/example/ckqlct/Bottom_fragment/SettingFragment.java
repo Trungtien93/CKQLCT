@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -71,7 +72,6 @@ public class SettingFragment extends Fragment {
         TextView thongtin = view.findViewById(R.id.txtPersonalInfo);
         TextView Caidat = view.findViewById(R.id.txtSettings);
         TextView thongTin = view.findViewById(R.id.txtCompanyInfo);
-
         // Initialize SharedPreferences and database
         sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         db = getActivity().openOrCreateDatabase("QLCTCK.db", Context.MODE_PRIVATE, null);

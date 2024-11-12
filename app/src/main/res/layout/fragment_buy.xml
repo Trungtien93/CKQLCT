@@ -14,7 +14,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="71dp"
-            android:background="#FFE3E3"
             android:orientation="vertical">
 
             <TextView
@@ -33,10 +32,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="210dp"
+            android:layout_height="230dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="47dp"
-            android:background="#FEF9F3"
+            android:background="@drawable/transaction_item_background"
             android:orientation="horizontal">
 
             <LinearLayout

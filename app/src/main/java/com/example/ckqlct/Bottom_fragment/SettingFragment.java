@@ -21,6 +21,7 @@ import com.example.ckqlct.Nav_fragment.SettingsFragment;
 import com.example.ckqlct.R;
 import com.example.ckqlct.Rating;
 import com.example.ckqlct.ThemChiTieu;
+import com.example.ckqlct.Update_Information;
 
 public class SettingFragment extends Fragment {
 
@@ -40,6 +41,15 @@ public class SettingFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Load updated data
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String updatedFullname = sharedPreferences.getString("fullname", "Guest");
+        ten.setText(updatedFullname);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,20 +94,14 @@ public class SettingFragment extends Fragment {
         }
 
         // Display fullname in the TextView
-        //22222
         ten.setText(fullname != null ? fullname : "Guest");
 
         // Navigate to SettingsFragment when "Personal Info" is clicked
-        thongtin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AccountFragment accountFragment = new AccountFragment ();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.frament_layout, accountFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
+        thongtin.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), Update_Information.class);
+            startActivity(intent);
         });
+
 
         // Set up onClick listeners for Change Password and Rate App
         txtChangeArea.setOnClickListener(v -> {

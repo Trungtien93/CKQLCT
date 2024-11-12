@@ -51,10 +51,11 @@
         android:id="@+id/imgProfile"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="72dp"
+        android:foregroundGravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
-        android:foregroundGravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

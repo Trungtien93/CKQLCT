@@ -82,25 +82,25 @@ public class ManagerFragment extends Fragment {
         TextView Next = view.findViewById(R.id.txtNext);
         LinearLayout lnchiTieu = view.findViewById(R.id.lnchiTieu);
         LinearLayout lnthuNhap = view.findViewById(R.id.lnthuNhap);
-        LineChart chart = view.findViewById(R.id.chart);
-
-        // Prepare data entries for the chart
-        List<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(1f, 100f));
-        entries.add(new Entry(2f, 200f));
-        entries.add(new Entry(3f, 150f));
-        entries.add(new Entry(4f, 300f));
-
-        // Create dataset and customize it
-        LineDataSet dataSet = new LineDataSet(entries, "Example Data");
-        dataSet.setColor(getResources().getColor(R.color.green, null));  // Customize color
-        dataSet.setValueTextColor(getResources().getColor(R.color.red , null));  // Customize text color
-        dataSet.setLineWidth(2f);  // Customize line width
-
-        // Create LineData and set it to the chart
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate();  // Refresh the chart
+//        LineChart chart = view.findViewById(R.id.chart);
+//
+//        // Prepare data entries for the chart
+//        List<Entry> entries = new ArrayList<>();
+//        entries.add(new Entry(1f, 100f));
+//        entries.add(new Entry(2f, 200f));
+//        entries.add(new Entry(3f, 150f));
+//        entries.add(new Entry(4f, 300f));
+//
+//        // Create dataset and customize it
+//        LineDataSet dataSet = new LineDataSet(entries, "Example Data");
+//        dataSet.setColor(getResources().getColor(R.color.green, null));  // Customize color
+//        dataSet.setValueTextColor(getResources().getColor(R.color.red , null));  // Customize text color
+//        dataSet.setLineWidth(2f);  // Customize line width
+//
+//        // Create LineData and set it to the chart
+//        LineData lineData = new LineData(dataSet);
+//        chart.setData(lineData);
+//        chart.invalidate();  // Refresh the chart
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         // Get user ID from SharedPreferences

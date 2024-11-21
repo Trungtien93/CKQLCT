@@ -56,29 +56,25 @@
             android:layout_gravity="center_vertical">
 
             <ImageView
-                android:id="@+id/notify"
+                android:id="@+id/userAvatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/background_gradient"
+                android:src="@drawable/ic_user" />
+
+            <ImageView
+                android:id="@+id/bellIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginLeft="80dp"
                 android:background="@drawable/draw_cricle"
                 android:src="@drawable/ic_bell" />
 
-            <View
-                android:id="@+id/redDot"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:background="@drawable/reddot"
-                android:layout_gravity="end|top"
-                android:visibility="gone" /> <!-- Ban đầu ẩn -->
+            <!-- Ban đầu ẩn -->
         </FrameLayout>
 
 
-        <ImageView
-            android:id="@+id/userAvatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/background_gradient"
-            android:src="@drawable/ic_user" />
     </LinearLayout>
 
     <!-- Phần Thông tin Tài chính -->

@@ -191,9 +191,9 @@ public class HomeFragment extends Fragment {
 
 // Enable the legend and position it outside
             Legend legend = pieChart.getLegend();
-            legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-            legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+            legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+            legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
             legend.setDrawInside(false);
             legend.setXEntrySpace(10f);  // Space between entries
             legend.setYEntrySpace(10f);  // Space between entries

@@ -1,10 +1,12 @@
 package com.example.ckqlct.Bottom_fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,6 +42,7 @@ public class HomeFragment extends Fragment {
     private TextView greetingText, ten, chitieu, thuNhap, thang, emptyDataText;
     private PieChart pieChart;
     private ListView lstHome;
+    private ImageView imageview;
     private SQLiteDatabase db;
     private static final String DATABASE_NAME = "QLCTCK.db";
 
@@ -64,6 +68,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @SuppressLint ("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -74,6 +79,7 @@ public class HomeFragment extends Fragment {
         thang = view.findViewById(R.id.txtThang);
         lstHome = view.findViewById(R.id.lstHome);
         emptyDataText = view.findViewById(R.id.emptyDataText);
+        imageview = view.findViewById (R.id.ImageView);
         // Initialize LineChart
         pieChart = view.findViewById(R.id.pieChart);
 

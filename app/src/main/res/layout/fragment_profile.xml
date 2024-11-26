@@ -33,6 +33,15 @@
 
     <!-- Menu items -->
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="camera"
+        tools:layout_editor_absoluteX="284dp"
+        tools:layout_editor_absoluteY="89dp"
+        tools:ignore="MissingConstraints" />
+
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
@@ -45,18 +54,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.544"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgProfile" />
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
 
     <ImageView
-        android:id="@+id/imgProfile"
+        android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="48dp"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.456"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -145,6 +145,7 @@ public class ThemThuNhap extends Activity {
             } else {
                 Toast.makeText(ThemThuNhap.this, "Thêm thu nhập thành công!", Toast.LENGTH_SHORT).show();
             }
+            clearFields();
         });
     }
 

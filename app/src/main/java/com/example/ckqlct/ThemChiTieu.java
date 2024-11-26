@@ -147,6 +147,7 @@ public class ThemChiTieu extends Activity {
             } else {
                 Toast.makeText(ThemChiTieu.this, "Thêm chi tiêu thành công!", Toast.LENGTH_SHORT).show();
             }
+            clearFields();
         });
     }
 

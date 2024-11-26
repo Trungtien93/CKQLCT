@@ -52,6 +52,12 @@ public class DoanhMuc_income extends AppCompatActivity {
         // Tải dữ liệu khi khởi động
         loadChiTieu();
 
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               finish();
+            }
+        });
         // Xử lý sự kiện cho nút "Thêm"
         btnThem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +99,7 @@ public class DoanhMuc_income extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     @SuppressLint("Range")

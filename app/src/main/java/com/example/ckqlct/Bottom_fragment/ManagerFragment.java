@@ -146,6 +146,15 @@ public class ManagerFragment extends Fragment {
                 Toast.makeText(getContext(), "User ID is not available", Toast.LENGTH_SHORT).show();
             }
         });
+        lnthuNhap.setOnClickListener(v -> {
+            if (userId != -1) {
+                int currentMonth = calendar.get(Calendar.MONTH) + 1;
+                int currentYear = calendar.get(Calendar.YEAR);
+                showExpensePieChart(userId, currentMonth, currentYear); // Pass month and year
+            } else {
+                Toast.makeText(getContext(), "User ID is not available", Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
     // Update the displayed date on the header
@@ -289,6 +298,155 @@ public class ManagerFragment extends Fragment {
         // Add Title TextView
         TextView title = new TextView(getContext());
         title.setText("Thống kê chi tiêu tháng " + month + " / " + year);
+        title.setTextSize(20f);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        title.setTypeface(Typeface.DEFAULT_BOLD);
+        layout.addView(title);
+
+        // Setup PieChart
+        PieChart pieChart = new PieChart(getContext());
+        LinearLayout.LayoutParams chartParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                800 // Adjust chart height
+        );
+        pieChart.setLayoutParams(chartParams);
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+        pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        PieData pieData = new PieData(pieDataSet);
+        pieData.setValueTextSize(16f);
+        pieData.setValueTextColor(android.graphics.Color.BLACK);
+
+        pieChart.setData(pieData);
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setDrawHoleEnabled(false);
+        pieChart.setEntryLabelTextSize(0f);
+
+        // Configure Legend
+        Legend legend = pieChart.getLegend();
+        legend.setEnabled(true);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setTextSize(16f);
+        legend.setWordWrapEnabled(true);
+
+        // Add PieChart to Layout
+        layout.addView(pieChart);
+
+        // Add ChartValueSelectedListener
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (e instanceof PieEntry) {
+                    String label = ((PieEntry) e).getLabel();
+                    Toast.makeText(getContext(), "Bạn vừa chọn: " + label, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
+                // No action required
+            }
+        });
+
+        // Display the Layout in a Dialog
+        Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(layout);
+
+        // Set dialog size
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+        params.copyFrom(dialog.getWindow().getAttributes());
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(params);
+
+        dialog.setCancelable(true);
+        dialog.setOnDismissListener(dialogInterface -> {
+            if (pieChart != null) pieChart.clear();
+        });
+
+        dialog.show();
+    }
+
+    private void showExpensePieChart(int userId, int month, int year) {
+        // Open or create the database
+        db = getActivity().openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
+
+        // Query income_name and income_total for the selected month and year
+        String query = "SELECT et.expense_name, SUM(e.expense_total) AS total_expense " +
+                "FROM Expense e " +
+                "JOIN Expense_Type et ON e.expenseType_id = et.expenseType_id " +
+                "WHERE e.id_user = ? AND strftime('%m', e.datetime) = ? AND strftime('%Y', e.datetime) = ? " +
+                "GROUP BY et.expense_name";
+
+        Cursor cursor = db.rawQuery(query, new String[]{
+                String.valueOf(userId),
+                String.format("%02d", month),
+                String.valueOf(year)
+        });
+
+        Map<String, Double> expenseData = new HashMap<>();
+        double totalExpense = 0;
+
+        if (cursor != null) {
+            // Debug column names
+            Log.d("Cursor Columns", Arrays.toString(cursor.getColumnNames()));
+
+            while (cursor.moveToNext()) {
+                int expenseNameIndex = cursor.getColumnIndex("expense_name");
+                int totalExpenseIndex = cursor.getColumnIndex("total_expense");
+
+                if (expenseNameIndex != -1 && totalExpenseIndex != -1) {
+                    String expenseName = cursor.getString(expenseNameIndex);
+                    double expenseTotal = cursor.getDouble(totalExpenseIndex);
+                    expenseData.put(expenseName, expenseTotal);
+                    totalExpense += expenseTotal;
+                }
+            }
+            cursor.close();
+        } else {
+            Toast.makeText(getContext(), "Database query failed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (totalExpense == 0) {
+            Toast.makeText(getContext(), "Chưa có thu nhập trong tháng vừa chọn", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Calculate percentages and create PieEntries
+        double threshold = 0.05; // 5% threshold for small entries
+        double othersTotal = 0;
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+
+        for (Map.Entry<String, Double> entry : expenseData.entrySet()) {
+            String expenseName = entry.getKey();
+            double expenseTotal = entry.getValue();
+            float percentage = (float) ((expenseTotal / totalExpense) * 100);
+
+            if (percentage < (threshold * 100)) {
+                othersTotal += expenseTotal; // Group small entries
+            } else {
+                pieEntries.add(new PieEntry(percentage, expenseName));
+            }
+        }
+
+        if (othersTotal > 0) {
+            float othersPercentage = (float) ((othersTotal / totalExpense) * 100);
+            pieEntries.add(new PieEntry(othersPercentage, "Thu nhập khác"));
+        }
+
+        // Layout setup (title + chart)
+        LinearLayout layout = new LinearLayout(getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(10, 10, 10, 10);
+
+        // Add Title TextView
+        TextView title = new TextView(getContext());
+        title.setText("Thống kê thu nhập tháng " + month + " / " + year);
         title.setTextSize(20f);
         title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         title.setTypeface(Typeface.DEFAULT_BOLD);

@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:backgroundTint="@color/pink"
-        android:text="Thêm Doanh Mục Chi tiêu"
+        android:text="Thêm Danh Mục Chi tiêu"
         android:textColor="@color/white" />
 
     <LinearLayout

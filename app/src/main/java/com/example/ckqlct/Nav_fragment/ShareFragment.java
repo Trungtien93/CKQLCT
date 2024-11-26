@@ -1,6 +1,7 @@
 package com.example.ckqlct.Nav_fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -38,88 +39,99 @@ public class ShareFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_share, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
 
-        // Khởi tạo cơ sở dữ liệu
-        dbHelper = new DataQLCT (getActivity());
-        db = dbHelper.getWritableDatabase();
+//        // Khởi tạo cơ sở dữ liệu
+//        dbHelper = new DataQLCT (getActivity());
+//        db = dbHelper.getWritableDatabase();
+//
+//        // Khởi tạo view
+//        edtType = view.findViewById(R.id.edtType);
+//        edtName = view.findViewById(R.id.edtName);
+//        btnThem = view.findViewById(R.id.btnThem);
+//        btnClear = view.findViewById(R.id.btnExit);
+//        lstChiTieu = view.findViewById(R.id.lstChiTieu);
+//
+//        // Khởi tạo danh sách loại thu nhập và adapter
+//        incomeTypeList = new ArrayList<>();
+//        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, incomeTypeList);
+//        lstChiTieu.setAdapter(adapter);
+//
+//        // Tải dữ liệu khi khởi động
+//        loadChiTieu();
+//
+//        // Xử lý sự kiện cho nút "Thêm"
+//        btnThem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SharedPreferences preferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+//                int userId = preferences.getInt("id_user", -1);  // -1 nếu không đăng nhập
+//
+//                // Kiểm tra xem người dùng đã đăng nhập chưa
+//                if (userId == -1) {
+//                    Toast.makeText(getActivity(), "Bạn cần đăng nhập để thêm loại thu nhập!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                // Lấy dữ liệu từ các trường EditText
+//                String incomeType = edtType.getText().toString().trim();
+//                String incomeName = edtName.getText().toString().trim();
+//
+//                // Kiểm tra dữ liệu nhập vào
+//                if (incomeType.isEmpty() || incomeName.isEmpty()) {
+//                    Toast.makeText(getActivity(), "Vui lòng nhập đủ thông tin!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                // Tạo ContentValues để thêm dữ liệu vào bảng Income_Type
+//                ContentValues values = new ContentValues();
+//                values.put("income_type", incomeType);
+//                values.put("income_name", incomeName);
+//
+//                // Chèn dữ liệu vào bảng Income_Type
+//                long result = db.insert("Income_Type", null, values);
+//
+//                if (result != -1) {
+//                    Toast.makeText(getActivity(), "Thêm loại thu nhập thành công!", Toast.LENGTH_SHORT).show();
+//                    edtType.setText("");
+//                    edtName.setText("");
+//                    loadChiTieu(); // Tải lại danh sách loại thu nhập sau khi thêm
+//                } else {
+//                    Toast.makeText(getActivity(), "Thêm thất bại. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+        // Tạo AlertDialog với layout tùy chỉnh contact_info.xml
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater1 = getLayoutInflater();
+        View dialogView = inflater1.inflate(R.layout.contact_info, null);
+        builder.setView(dialogView);
 
-        // Khởi tạo view
-        edtType = view.findViewById(R.id.edtType);
-        edtName = view.findViewById(R.id.edtName);
-        btnThem = view.findViewById(R.id.btnThem);
-        btnClear = view.findViewById(R.id.btnExit);
-        lstChiTieu = view.findViewById(R.id.lstChiTieu);
+        // Thiết lập nút đóng cho AlertDialog
+        builder.setPositiveButton("Đóng", (dialog, which) -> dialog.dismiss());
 
-        // Khởi tạo danh sách loại thu nhập và adapter
-        incomeTypeList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, incomeTypeList);
-        lstChiTieu.setAdapter(adapter);
-
-        // Tải dữ liệu khi khởi động
-        loadChiTieu();
-
-        // Xử lý sự kiện cho nút "Thêm"
-        btnThem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences preferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                int userId = preferences.getInt("id_user", -1);  // -1 nếu không đăng nhập
-
-                // Kiểm tra xem người dùng đã đăng nhập chưa
-                if (userId == -1) {
-                    Toast.makeText(getActivity(), "Bạn cần đăng nhập để thêm loại thu nhập!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // Lấy dữ liệu từ các trường EditText
-                String incomeType = edtType.getText().toString().trim();
-                String incomeName = edtName.getText().toString().trim();
-
-                // Kiểm tra dữ liệu nhập vào
-                if (incomeType.isEmpty() || incomeName.isEmpty()) {
-                    Toast.makeText(getActivity(), "Vui lòng nhập đủ thông tin!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // Tạo ContentValues để thêm dữ liệu vào bảng Income_Type
-                ContentValues values = new ContentValues();
-                values.put("income_type", incomeType);
-                values.put("income_name", incomeName);
-
-                // Chèn dữ liệu vào bảng Income_Type
-                long result = db.insert("Income_Type", null, values);
-
-                if (result != -1) {
-                    Toast.makeText(getActivity(), "Thêm loại thu nhập thành công!", Toast.LENGTH_SHORT).show();
-                    edtType.setText("");
-                    edtName.setText("");
-                    loadChiTieu(); // Tải lại danh sách loại thu nhập sau khi thêm
-                } else {
-                    Toast.makeText(getActivity(), "Thêm thất bại. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
+        // Hiển thị AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
         return view;
     }
 
-    @SuppressLint("Range")
-    private void loadChiTieu() {
-        ArrayList<ChiTieuItem> chiTieuList = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT income_type, income_name FROM Income_Type", null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String type = cursor.getString(cursor.getColumnIndex("income_type"));
-                String name = cursor.getString(cursor.getColumnIndex("income_name"));
-                chiTieuList.add(new ChiTieuItem(type, name));
-            }
-            cursor.close();
-        }
-
-        // Sử dụng ChiTieuAdapter để hiển thị dữ liệu
-        ChiTieuAdapter adapter = new ChiTieuAdapter(getActivity(), chiTieuList);
-        lstChiTieu.setAdapter(adapter);
-    }
+//    @SuppressLint("Range")
+//    private void loadChiTieu() {
+//        ArrayList<ChiTieuItem> chiTieuList = new ArrayList<>();
+//        Cursor cursor = db.rawQuery("SELECT income_type, income_name FROM Income_Type", null);
+//
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                String type = cursor.getString(cursor.getColumnIndex("income_type"));
+//                String name = cursor.getString(cursor.getColumnIndex("income_name"));
+//                chiTieuList.add(new ChiTieuItem(type, name));
+//            }
+//            cursor.close();
+//        }
+//
+//        // Sử dụng ChiTieuAdapter để hiển thị dữ liệu
+//        ChiTieuAdapter adapter = new ChiTieuAdapter(getActivity(), chiTieuList);
+//        lstChiTieu.setAdapter(adapter);
+//    }
 }

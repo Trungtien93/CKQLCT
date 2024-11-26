@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_settings) {
                 replaceFragment(new SettingsFragment());
+            }
+            else if (item.getItemId() == R.id.nav_home) {
+                replaceFragment(new HomeFragment());
             } else if (item.getItemId() == R.id.nav_share) {
                 replaceFragment(new ShareFragment());
             } else if (item.getItemId() == R.id.nav_about) {

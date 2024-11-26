@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +52,12 @@ public class DoanhMuc_Expense extends AppCompatActivity {
 
         // Load existing expense categories when opening the activity
         loadExpenseData();
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         // Handle the "Add" button click event
         btnAdd.setOnClickListener(v -> {

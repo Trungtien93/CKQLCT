@@ -1,248 +1,114 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Header section -->
-    <!--<FrameLayout-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-
-    <!--    </FrameLayout>-->
-
-    <!-- Upgrade button -->
-
+    <!-- Ảnh đại diện -->
     <ImageView
-        android:id="@+id/imgHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:id="@+id/imgAvatar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp"
         android:layout_marginBottom="8dp"
-        android:cropToPadding="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/headerbkg"
-        app:layout_constraintBottom_toTopOf="@id/txtTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_profile"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-
-    <!-- Menu items -->
-
+    <!-- Nút đổi ảnh -->
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_ChangeAvatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="camera"
-        tools:layout_editor_absoluteX="284dp"
-        tools:layout_editor_absoluteY="89dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginTop="8dp"
+        android:text="Thay đổi ảnh"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/imgAvatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Tên người dùng -->
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text=""
+        android:layout_marginTop="16dp"
+        android:text="Tên Người Dùng"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.544"
+        app:layout_constraintTop_toBottomOf="@id/btn_ChangeAvatar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="48dp"
-        android:foregroundGravity="center"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.456"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/btnUpgrade"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="@id/linearMenu"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtTitle">
-
-        <ImageView
-            android:id="@+id/imgUpgradeIcon"
-            android:layout_width="44dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_walletsave" />
-
-        <TextView
-            android:id="@+id/txtUpgrade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Nâng cấp lên Plus"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-    </LinearLayout>
-
+    <!-- Các menu chức năng -->
     <LinearLayout
         android:id="@+id/linearMenu"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnUpgrade">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <!-- Thông tin cá nhân -->
+        <TextView
+            android:id="@+id/txtPersonalInfo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_user"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:text="Thông tin cá nhân"
+            android:textSize="16sp" />
 
-
-            <TextView
-                android:id="@+id/txtPersonalInfo"
-                android:layout_width="370dp"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_user"
-                android:drawablePadding="8dp"
-
-                android:padding="16dp"
-                android:text="Thông tin cá nhân"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1"
-                android:text=">"
-                android:textAlignment="viewStart"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <!-- Cài đặt -->
+        <TextView
+            android:id="@+id/txtSettings"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_settings"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:text="Cài đặt"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txtSettings"
-                android:layout_width="370dp"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_settings"
-                android:drawablePadding="8dp"
-                android:padding="16dp"
-                android:text="Cài đặt"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=">"
-                android:textAlignment="viewStart"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
+        <!-- Thay đổi mật khẩu -->
+        <TextView
+            android:id="@+id/txtChangeArea"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_pw"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:text="Thay đổi mật khẩu"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txtChangeArea"
-                android:layout_width="370dp"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_pw"
-                android:drawablePadding="8dp"
-                android:padding="16dp"
-                android:onClick="changepass"
-                android:text="Thay đổi mật khẩu"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=">"
-                android:textAlignment="viewStart"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
+        <!-- Đánh giá ứng dụng -->
+        <TextView
+            android:id="@+id/txtRateApp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_star"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:text="Đánh giá ứng dụng"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txtRateApp"
-                android:layout_width="370dp"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_star"
-                android:drawablePadding="8dp"
-                android:padding="16dp"
-                android:text="Đánh giá ứng dụng"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=">"
-                android:textAlignment="viewStart"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
+        <!-- Thông tin công ty -->
+        <TextView
+            android:id="@+id/txtCompanyInfo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/txtCompanyInfo"
-                android:layout_width="370dp"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_info"
-                android:drawablePadding="8dp"
-                android:padding="16dp"
-                android:text="Thông tin công ty"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=">"
-                android:textAlignment="viewStart"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_info"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:text="Thông tin công ty"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

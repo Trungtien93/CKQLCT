@@ -1,8 +1,12 @@
 package com.example.ckqlct;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.ImageView;
 
 public class DataQLCT extends SQLiteOpenHelper {
 
@@ -17,6 +21,7 @@ public class DataQLCT extends SQLiteOpenHelper {
             "pass_word NVARCHAR(255) NOT NULL, " +
             "fullname NVARCHAR(100), " +
             "email NVARCHAR(100) NOT NULL UNIQUE, " +
+            "image TEXT," +
             "datetime DATETIME DEFAULT CURRENT_TIMESTAMP" +
             ");";
 
@@ -138,5 +143,25 @@ public class DataQLCT extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Statistical");
         db.execSQL("DROP TABLE IF EXISTS Version");
         onCreate(db);
+    }
+
+    public void loadAvatarFromDatabase(ImageView img, int UserId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT image FROM User WHERE id_user = ?", new String[]{String.valueOf(UserId)});
+        if (cursor != null && cursor.moveToFirst()) {
+            String avatarPath = cursor.getString(cursor.getColumnIndexOrThrow("image"));
+            if (avatarPath != null) {
+                Bitmap avatar = BitmapFactory.decodeFile(avatarPath);
+                // Hiển thị ảnh từ đường dẫn
+                img.setImageBitmap(avatar);
+            }
+            else{
+                img.setImageResource(R.drawable.ic_profile);
+            }
+        }
+        else{
+            cursor.close();
+        }
+        db.close();
     }
 }

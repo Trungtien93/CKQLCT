@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
         thang = view.findViewById(R.id.txtThang);
         lstHome = view.findViewById(R.id.lstHome);
         emptyDataText = view.findViewById(R.id.emptyDataText);
-        imageview = view.findViewById (R.id.ImageView);
+
         // Initialize LineChart
         pieChart = view.findViewById(R.id.pieChart);
 
